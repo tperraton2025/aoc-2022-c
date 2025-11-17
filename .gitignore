@@ -1,3 +1,16 @@
-!**.c
-!**.h
+build
+CMakeFiles
+Makefile
+CMakeCache/
+Testing/
 
+CMakeCache.txt
+CMakeCache.txt
+
+*.elf
+*.bin
+*.cmake
+*.log
+*.tcl
+
+!*.c
