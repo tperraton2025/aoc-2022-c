@@ -2,7 +2,6 @@
 #include <aoc_linked_list.h>
 #include <string.h>
 #include <stdint.h>
-#include <math.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
@@ -23,15 +22,13 @@ static int prologue(struct solutionCtrlBlock_t *_blk)
 
 static int handler(struct solutionCtrlBlock_t *_blk)
 {
-    struct context_t *_ctx = CTX_CAST(_blk->_data);
     return 0;
 }
 
 static int epilogue(struct solutionCtrlBlock_t *_blk)
 {
-    struct context_t *_ctx = CTX_CAST(_blk->_data);
-    return _ctx->result;
+    return CTX_CAST(_blk->_data)->result;
 }
 
-static struct solutionCtrlBlock_t privPart1 = {._name = CONFIG_DAY " part 1", ._prologue = prologue, ._handler = handler, ._epilogue = epilogue};
-struct solutionCtrlBlock_t *part1 = &privPart1;
+static struct solutionCtrlBlock_t privPart2 = {._name = CONFIG_DAY " part 2", ._prologue = prologue, ._handler = handler, ._epilogue = epilogue};
+struct solutionCtrlBlock_t *part2 = &privPart2;

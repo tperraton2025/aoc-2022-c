@@ -37,8 +37,8 @@ static void freeElf(struct elfCal_t *_elf)
 {
     assert(_elf);
     assert(_elf->_name);
-    free(_elf->_name);
-    free(_elf);
+    FREE(_elf->_name);
+    FREE(_elf);
 }
 
 static void freeAllElves(struct elfCal_t *_first)
@@ -60,7 +60,7 @@ static void freeAllElves(struct elfCal_t *_first)
 static int prologue(struct solutionCtrlBlock_t *_blk)
 {
     _blk->_data = malloc(sizeof(struct data_t));
-    struct data_t *_pd = CAST(struct data_t*, _blk->_data);
+    struct data_t *_pd = CAST(struct data_t *, _blk->_data);
     _pd->_first = elfCtor(NULL);
     _pd->_current = _pd->_first;
     return 0;
@@ -68,8 +68,8 @@ static int prologue(struct solutionCtrlBlock_t *_blk)
 
 static int handler(struct solutionCtrlBlock_t *_blk)
 {
-    struct data_t *_pdata = CAST(struct data_t*, _blk->_data);
-    struct elfCal_t *_p_last_elf = CAST(struct elfCal_t*, _pdata->_current);
+    struct data_t *_pdata = CAST(struct data_t *, _blk->_data);
+    struct elfCal_t *_p_last_elf = CAST(struct elfCal_t *, _pdata->_current);
 
     int _cal = 0;
     if (sscanf(_blk->_str, "%d\n", &_cal))
@@ -88,7 +88,7 @@ static int handler(struct solutionCtrlBlock_t *_blk)
 
 static int epilogue(struct solutionCtrlBlock_t *_blk)
 {
-    struct data_t *_data = CAST(struct data_t*, _blk->_data);
+    struct data_t *_data = CAST(struct data_t *, _blk->_data);
     int result = _data->_maxCalories;
     freeAllElves(_data->_current);
     return result;

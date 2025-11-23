@@ -1,45 +1,40 @@
 cmake_minimum_required(VERSION 3.10.0)
-set(FOLDER "")
-string(REGEX MATCH "/[0-9][0-9][0-9]$" FOLDER ${CMAKE_SOURCE_DIR})
-string(REPLACE "/" "" FOLDER ${FOLDER})
 
-set(DAY "day${FOLDER}")
+get_filename_component(ProjectId ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+string(REPLACE " " "_" ProjectId ${ProjectId})
+
 project(
-  ${DAY}
+  ${ProjectId}
   VERSION 0.1.0
   LANGUAGES C CXX)
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/../lib ${CMAKE_SOURCE_DIR}/../lib
-                 EXCLUDE_FROM_ALL)
+add_executable(${ProjectId} main.c part1.c part2.c)
+set_property(TARGET ${ProjectId} PROPERTY C_STANDARD 11)
+target_include_directories(${ProjectId} PRIVATE ${CMAKE_SOURCE_DIR}
+                                                ${CMAKE_SOURCE_DIR}/../lib/inc)
 
-add_executable(${DAY} main.c part1.c part2.c)
-target_include_directories(${DAY} PRIVATE ${CMAKE_SOURCE_DIR}
-                                          ${CMAKE_SOURCE_DIR}/../lib/inc)
+target_link_libraries(${ProjectId} libaochelpers)
+set(CMAKE_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
 
-target_link_libraries(${DAY} libaochelpers)
-set(CMAKE_BUILD_TYPE DEBUG)
-add_definitions(-DCONFIG_DAY="${DAY}")
+set_target_properties(
+  ${ProjectId}
+  PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+             LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+             RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
+add_definitions(-DCONFIG_DAY="${ProjectId}")
 # unit tests
 include(CTest)
-add_test(NAME ${DAY}test COMMAND ${DAY} "./data/test1.txt")
-add_test(NAME ${DAY}input COMMAND ${DAY} "./data/input.txt")
+add_test(
+  NAME ${ProjectId}test
+  COMMAND "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/bin/${ProjectId}"
+          "${CMAKE_CURRENT_SOURCE_DIR}/data/test1.txt" --exe "${ProjectId}test")
+add_test(
+  NAME ${ProjectId}input
+  COMMAND
+    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/bin/${ProjectId}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/data/input.txt" --exe "${ProjectId}input")
 
-set(PROLOGUE1 "Welcome to AOC 2022 ${DAY} part 1")
-set(PROLOGUE2 "Welcome to AOC 2022 ${DAY} part 2")
-
-function(add_test_regex test result1 result2)
-  set(result1 "AOC 2022 ${DAY} part 1 solution is ${result1}")
-  set(result2 "AOC 2022 ${DAY} part 2 solution is ${result2}")
-  message(INFO " ${test} requires prompts:")
-  message(INFO " ${result1}")
-  message(INFO " ${result2}")
-  set_property(TEST ${test} PROPERTY PASS_REGULAR_EXPRESSION "${PROLOGUE1}")
-  set_property(TEST ${test} PROPERTY PASS_REGULAR_EXPRESSION "${result1}")
-  set_property(TEST ${test} PROPERTY PASS_REGULAR_EXPRESSION "${PROLOGUE2}")
-  set_property(TEST ${test} PROPERTY PASS_REGULAR_EXPRESSION "${result2}")
-endfunction()
-
-add_test_regex(${DAY}test "0" "0")
-add_test_regex(${DAY}input "0" "0")
-
+add_aoc_day_test_regex(${ProjectId}test "0" "0")
+add_aoc_day_test_regex(${ProjectId}input "0" "0")

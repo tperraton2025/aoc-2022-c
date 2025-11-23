@@ -1,5 +1,6 @@
 #include <aoc_helpers.h>
 #include <aoc_linked_list.h>
+#include <aoc_ranges.h>
 #include <string.h>
 #include <stdint.h>
 #include <math.h>
@@ -12,7 +13,19 @@ struct context_t
     int result;
 };
 
+static char mine;
+static char his;
+static int points[] = {0, 3, 6};
+static char *names[] = {"rock", "paper", "scissors"};
+
+static size_t matrix[3][3] = {{1, 0, 2}, {2, 1, 0}, {0, 2, 1}};
+
 #define CTX_CAST(_p) ((struct context_t *)_p)
+
+size_t score_ind_from_items(size_t mine, size_t his)
+{
+    return matrix[mine][his]; 
+}
 
 static int prologue(struct solutionCtrlBlock_t *_blk)
 {
@@ -23,16 +36,13 @@ static int prologue(struct solutionCtrlBlock_t *_blk)
 
 static int handler(struct solutionCtrlBlock_t *_blk)
 {
-    char mine, his;
-    int points[] = {0, 3, 6};
-    char *names[] = {"rock", "paper", "scissors"};
 
     if (2 == sscanf(_blk->_str, "%c %c\n", &his, &mine))
     {
         his -= 'A';
         mine -= 'X';
-        size_t index = abs((1 + mine - his) % 3);
-        if (his > 2 || mine > 2 || index > 2)
+        size_t index = score_ind_from_items(mine, his);
+        if (!N_IN_RANGE(his, 0, 2) || !N_IN_RANGE(mine, 0, 2) || !N_IN_RANGE(index, 0, 2))
         {
             aoc_err("%s:%d his:%u mine:%u index:%lu", __FILE__, __LINE__, (uint8_t)his, (uint8_t)mine, index);
             exit(EXIT_FAILURE);

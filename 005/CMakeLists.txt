@@ -28,11 +28,11 @@ add_definitions(-DCONFIG_DAY="${ProjectId}")
 # unit tests
 include(CTest)
 add_test(NAME ${ProjectId}test
-         COMMAND "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/bin/${ProjectId}" "${CMAKE_CURRENT_SOURCE_DIR}/data/test1.txt"
-                 --exe "${ProjectId}test")
+         COMMAND "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/bin/${ProjectId}"
+                 "${CMAKE_CURRENT_SOURCE_DIR}/data/test1.txt" --exe "${ProjectId}test")
 add_test(NAME ${ProjectId}input
-         COMMAND "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/bin/${ProjectId}" "${CMAKE_CURRENT_SOURCE_DIR}/data/input.txt"
-                 --exe "${ProjectId}input")
+         COMMAND "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/bin/${ProjectId}"
+                 "./data/input.txt" --exe "${ProjectId}test")
 
-add_aoc_day_test_regex(${ProjectId}test "24000" "45000")
-add_aoc_day_test_regex(${ProjectId}input "72511" "212117")
+add_aoc_day_test_regex(${ProjectId}test "CMZ" "MCD")
+add_aoc_day_test_regex(${ProjectId}input "CWMTGHBDW" "SSCGWJCRB")

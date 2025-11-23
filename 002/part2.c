@@ -1,4 +1,5 @@
 #include <aoc_helpers.h>
+#include <aoc_ranges.h>
 #include <aoc_linked_list.h>
 #include <string.h>
 #include <stdint.h>
@@ -13,6 +14,8 @@ struct context_t
 
 #define CTX_CAST(_p) ((struct context_t *)_p)
 
+extern size_t score_ind_from_items(char mine, char his);
+
 static int prologue(struct solutionCtrlBlock_t *_blk)
 {
     _blk->_data = malloc(sizeof(struct context_t));
@@ -22,22 +25,55 @@ static int prologue(struct solutionCtrlBlock_t *_blk)
 
 static int handler(struct solutionCtrlBlock_t *_blk)
 {
-    char yield, his, mine;
-    int points[] = {0, 3, 6};
-    char *names[] = {"rock", "paper", "scissors"};
+    char _outcome = 0;
+    char _his = 0;
+    char _mine = 0;
 
-    if (2 == sscanf(_blk->_str, "%c %c\n", &his, &yield))
+    const char *_psOutcome = NULL;
+    const char *_psHis = NULL;
+    const char *_psMine = NULL;
+
+    int _luReqOutcomeInd = 0;
+    int _luHisInd = 0;
+    int _luMineInd = 0;
+
+    const int _pI_points[] = {0, 3, 6};
+    const char *const _psItemsStr[] = {"rock", "paper", "scissors"};
+    const char *const _psOutcomeStr[] = {"I loose :(", "draw :|", "I win :)"};
+
+    if (2 == sscanf(_blk->_str, "%c %c\n", &_his, &_outcome))
     {
-        his -= 'A';
-        yield -= 'X';
-        mine = abs((his + (yield - 1)) % 3);
-        if (his > 2 || mine > 2 || yield > 2)
+        /* getting index from the items and outcome picked by players */
+        _luHisInd = (int)(_his - 'A');
+        _luReqOutcomeInd = (int)(_outcome - 'X');
+
+        _luMineInd = _luHisInd + _luReqOutcomeInd - 1;
+        if (_luMineInd < 0)
+            _luMineInd = 3 + _luMineInd;
+        else if (_luMineInd >= 3)
+            _luMineInd = _luMineInd % 3;
+
+        _mine = _luMineInd + 'A';
+
+        _psOutcome = _psOutcomeStr[_luReqOutcomeInd];
+        _psHis = _psItemsStr[_luHisInd];
+        _psMine = _psItemsStr[_luMineInd];
+
+        /* Depending on the outcome required */
+
+        if (!N_IN_RANGE(_luHisInd, 0, 2) || !N_IN_RANGE(_luMineInd, 0, 2) || !N_IN_RANGE(_luReqOutcomeInd, 0, 2))
         {
-            aoc_err("%s:%d  his:%u mine:%u yield:%u", __FILE__, __LINE__, (uint8_t)his, (uint8_t)mine, (uint8_t)yield);
+            aoc_err("%s:%d  he picked:%i I picked:%i outcome:%i", __FILE__, __LINE__, _luHisInd,
+                    _luMineInd,
+                    _luReqOutcomeInd);
             exit(EXIT_FAILURE);
         }
 
-        int round = (mine + 1) + points[yield];
+        size_t _indCheck = score_ind_from_items(_luMineInd, _luHisInd);
+        if (_indCheck != _luReqOutcomeInd)
+            aoc_info("he picked %-10s I picked %-10s -> %-12s and it should be %-12s", _psHis, _psMine, _psOutcomeStr[_indCheck], _psOutcome);
+
+        int round = (_luMineInd + 1) + _pI_points[_luReqOutcomeInd];
         CTX_CAST(_blk->_data)->result += round;
     }
     return 0;
