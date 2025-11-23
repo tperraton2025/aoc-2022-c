@@ -1,7 +1,7 @@
-#Advent of Code 2022 solutions in C.
+# Advent of Code 2022 solutions in C.
 To run : 
-'cmake ./CMakeLists.txt'
+> cmake ./CMakeLists.txt
 then
-'make all'
+> make all
 then 
-'make test'
+> make test
