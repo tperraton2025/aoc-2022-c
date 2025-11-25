@@ -17,14 +17,14 @@ typedef struct tree_node_t *aoc_tree_node_h;
 typedef struct tree_blk_t *aoc_tree_blk_t;
 
 int aoc_tree_node(aoc_tree_node_h parent, aoc_tree_node_h new, void (free)(void *arg));
-aoc_tree_node_h tree_blk_init(void);
+aoc_tree_node_h aoc_tree_blk_init(void);
 int tree_node_append(aoc_tree_node_h _parent, aoc_tree_node_h _new);
 
-void tree_free_all(aoc_tree_blk_t _blk, aoc_tree_node_h _start, void (_caller)(void *_data));
-void tree_free_all_from_starting_node(aoc_tree_node_h _start, void (_caller)(void *_data));
+void tree_free_all(aoc_tree_blk_t _blk, aoc_tree_node_h _start);
+void tree_free_all_from_starting_node(aoc_tree_node_h _start);
 
-void aoc_tree_free_node(aoc_tree_node_h _a, void (_free)(void *arg));
-void aoc_tree_permut(aoc_tree_node_h _a, aoc_tree_node_h _b);
+void aoc_tree_free_node(aoc_tree_node_h _a);
+int aoc_tree_permut(aoc_tree_node_h _a, aoc_tree_node_h _b);
 size_t aoc_tree_size(aoc_tree_node_h _start);
 
 aoc_tree_node_h aoc_tree_leaf_node(aoc_tree_node_h _parent);

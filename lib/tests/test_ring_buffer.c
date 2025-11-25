@@ -59,6 +59,7 @@ void rb_test_suite()
     }
 
     CU_ASSERT(aoc_ring_buffer_available(_bf) == 10);
+    aoc_ring_buffer_free(_bf);
 
     aoc_ans("%s", "ring_buffer_test_suite: all tests passed");
 }

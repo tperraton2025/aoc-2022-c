@@ -108,6 +108,7 @@ void ll_test_suite()
     CU_ASSERT(1 == ll_count_nodes_by_property(&_ll, _str4->_str, _string_node_equal));
     CU_ASSERT(_str4 == TS_CAST(ll_find_node_by_property(&_ll, _str4->_str, _string_node_equal)));
 
+    ll_free_all(&_ll, free_test_string);
     aoc_ans("%s", "ll_test_suite: all tests passed");
 }
 
@@ -116,7 +117,7 @@ static _string_test_t *_string_ll_test(const char *const _str)
     _string_test_t *_nstr = malloc(sizeof(_string_test_t));
     assert(_nstr && "_string_ll_test malloc failed");
 
-    _nstr->_str = malloc(strnlen(_str, TEST_STRING_MAX_LEN + 1));
+    _nstr->_str = malloc(strnlen(_str, TEST_STRING_MAX_LEN + 1) + 1);
     assert(_nstr->_str && "_nstr->_str malloc failed");
     sprintf(_nstr->_str, "%s", _str);
 
@@ -134,5 +135,5 @@ static void free_test_string(void *_node)
 
 static bool _string_node_equal(void *_a, void *_b)
 {
-    return 0 == strncmp(TS_CAST(_a)->_str, (char *)_b, TEST_STRING_MAX_LEN);
+    return 0 == strncmp((const char *)TS_CAST(_a)->_str, (const char *)_b, TEST_STRING_MAX_LEN);
 }
