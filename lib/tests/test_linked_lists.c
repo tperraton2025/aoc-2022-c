@@ -134,5 +134,5 @@ static void free_test_string(void *_node)
 
 static bool _string_node_equal(void *_a, void *_b)
 {
-    return 0 == strcmp(TS_CAST(_a)->_str, (char *)_b);
+    return 0 == strncmp(TS_CAST(_a)->_str, (char *)_b, TEST_STRING_MAX_LEN);
 }

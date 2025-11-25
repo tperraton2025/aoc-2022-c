@@ -48,19 +48,17 @@ int ll_node_append(aoc_linked_list_handle_t _blk, struct ll_node_t *_new)
     if (_blk->_last)
     {
         _new->_prev = _blk->_last;
-        _blk->_current = _new;
         _blk->_last->_next = _new;
         _blk->_last = _new;
-        _new->_next = NULL;
     }
     else
     {
         _blk->_first = _new;
-        _blk->_current = _new;
         _blk->_last = _new;
-        _new->_next = NULL;
         _new->_prev = NULL;
     }
+    _blk->_current = _new;
+    _new->_next = NULL;
     return 0;
 }
 
@@ -71,7 +69,7 @@ void ll_node_permut(aoc_linked_list_handle_t _ctx, struct ll_node_t *_a, struct 
 
     if (_ctx->_first == _a || _ctx->_first == _b)
         _ctx->_first = _ctx->_first == _a ? _b : _a;
-    
+
     if (_ctx->_last == _a || _ctx->_last == _b)
         _ctx->_last = _ctx->_last == _a ? _b : _a;
 
@@ -111,6 +109,8 @@ void ll_node_insert(aoc_linked_list_handle_t _ctx, struct ll_node_t *_a, struct 
 void ll_node_remove(aoc_linked_list_handle_t _ctx, struct ll_node_t *_a)
 {
     assert(_ctx->_size != 0 && "attempt to remove link from an empty sinked list");
+    assert(_a && "NULL pointer provided");
+
     _ctx->_size--;
     if (_a->_prev)
         _a->_prev->_next = _a->_next;

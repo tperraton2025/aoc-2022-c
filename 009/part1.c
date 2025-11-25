@@ -75,6 +75,8 @@ static int track_tail(struct solutionCtrlBlock_t *_blk, coord_t *_pos)
     _npos->_pos._y = _pos->_y;
     if (NULL == ll_find_node_by_property(&_ctx->_tailPos, (void *)_npos, coord_compare))
         return ll_node_append(&_ctx->_tailPos, NODE_CAST(_npos));
+    else
+        free(_npos);
     return EALREADY;
 }
 
@@ -199,7 +201,7 @@ static int epilogue(struct solutionCtrlBlock_t *_blk)
         nmov = MOV_CAST(_node);
         for (size_t ii = 0; ii < nmov->steps; ii++)
         {
-            int_refresh_link(_blk, _ctx->_head, _ctx->_tail, nmov->dir); 
+            int_refresh_link(_blk, _ctx->_head, _ctx->_tail, nmov->dir);
         }
     }
 
@@ -208,11 +210,20 @@ static int epilogue(struct solutionCtrlBlock_t *_blk)
         coord_tracker_t *_npos = CAST(coord_tracker_t *, pos_node);
         engine_draw_symbol_at(_ctx->_eng, &_npos->_pos, "#");
     }
+
+    int result = _ctx->result;
+    return result;
+}
+
+static void free_solution(struct solutionCtrlBlock_t *_blk)
+{
+    struct context_t *_ctx = CAST(struct context_t *, _blk->_data);
     engine_free(_ctx->_eng);
     ll_free_all(&_ctx->_movs, free);
     _ctx->result = aoc_ll_size(&_ctx->_tailPos);
-    return _ctx->result;
+    ll_free_all(&_ctx->_tailPos, free);
+    free(_blk->_data);
 }
 
-static struct solutionCtrlBlock_t privPart1 = {._name = CONFIG_DAY " part 1", ._prologue = prologue, ._handler = handler, ._epilogue = epilogue};
+static struct solutionCtrlBlock_t privPart1 = {._name = CONFIG_DAY " part 1", ._prologue = prologue, ._handler = handler, ._epilogue = epilogue, ._free = free_solution};
 struct solutionCtrlBlock_t *part1 = &privPart1;

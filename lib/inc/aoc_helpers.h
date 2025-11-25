@@ -6,6 +6,7 @@
 #include "aoc_types.h"
 #include <assert.h>
 #include <unistd.h>
+#include <errno.h>
 
 #define FREE(_p) \
     free(_p);    \
@@ -27,6 +28,7 @@ struct solutionCtrlBlock_t
     int (*_prologue)(struct solutionCtrlBlock_t *_data);
     int (*_handler)(struct solutionCtrlBlock_t *_data);
     int (*_epilogue)(struct solutionCtrlBlock_t *_data);
+    void (*_free)(struct solutionCtrlBlock_t *_data);
     void *_data;
 };
 

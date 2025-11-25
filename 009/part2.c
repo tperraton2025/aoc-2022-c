@@ -235,14 +235,20 @@ static int epilogue(struct solutionCtrlBlock_t *_blk)
         coord_tracker_t *_npos = CAST(coord_tracker_t *, pos_node);
         engine_draw_symbol_at(_ctx->_eng, &_npos->_pos, "#");
     }
-    engine_free(_ctx->_eng);
-    size_t result = aoc_ll_size(&_ctx->_tailPos);
+    int result = aoc_ll_size(&_ctx->_tailPos);
 
-    ll_free_all(&_ctx->_movs, free);
-    ll_free_all(&_ctx->_tailPos, free);
-    free(_blk->_data);
     return result;
 }
 
-static struct solutionCtrlBlock_t privPart2 = {._name = CONFIG_DAY " part 2", ._prologue = prologue, ._handler = handler, ._epilogue = epilogue};
+
+static void free_solution(struct solutionCtrlBlock_t *_blk)
+{
+    struct context_t *_ctx = CAST(struct context_t *, _blk->_data);
+    engine_free(_ctx->_eng);
+    ll_free_all(&_ctx->_tailPos, free);
+    ll_free_all(&_ctx->_movs, free); 
+    free(_blk->_data); 
+}
+
+static struct solutionCtrlBlock_t privPart2 = {._name = CONFIG_DAY " part 2", ._prologue = prologue, ._handler = handler, ._epilogue = epilogue, ._free = free_solution};
 struct solutionCtrlBlock_t *part2 = &privPart2;

@@ -83,7 +83,7 @@ struct context_t
 #define MAP_MID_SIZE (16)
 
 #define MQ_NAME_SIZE_UINT (8)
-#define MQ_NAME_SIZE_FMT "8"
+#define MQ_NAME_SIZE_FMT "16"
 
 static struct solutionCtrlBlock_t privPart1;
 void *graphics_routine(void *args);
@@ -94,7 +94,7 @@ void sig_int_handler(int args)
     struct context_t *_ctx = CTX_CAST(privPart1._data);
     aoc_warn("received signal %s", strsignal(args));
 
-    if (SIGINT|SIGKILL|SIGABRT|SIGSTOP|SIGTSTP & args)
+    if (SIGINT | SIGKILL | SIGABRT | SIGSTOP | SIGTSTP & args)
     {
         FOREACH_P_NONNULL(_ii, _ctx->_hMqueues)
         {
@@ -116,7 +116,8 @@ void queue_setup(struct context_t *_ctx, _hQueue_t *_pxQueue, const char *_name)
 {
     size_t len = strnlen(_name, MQ_NAME_SIZE_UINT);
     _pxQueue->_sName = malloc(len + 1);
-    sprintf(_pxQueue->_sName, "%" MQ_NAME_SIZE_FMT "s", _name);
+    snprintf(_pxQueue->_sName, MQ_NAME_SIZE_UINT, "%s", _name);
+    printf("%s\n", _pxQueue->_sName);
     _pxQueue->_xMode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
     _pxQueue->_attr.mq_curmsgs = 0;
     _pxQueue->_attr.mq_flags = 0;
@@ -148,9 +149,14 @@ static int prologue(struct solutionCtrlBlock_t *_blk)
     signal(SIGABRT, sig_int_handler);
     signal(SIGSTOP, sig_int_handler);
     signal(SIGTSTP, sig_int_handler);
- 
+
     pthread_join(_ctx->_graphics._thr, NULL);
     pthread_join(_ctx->_inputs._thr, NULL);
+
+    free(_ctx->_graphics._xQueue._sName);
+    free(_ctx->_inputs._xQueue._sName);
+    mq_close(_ctx->_graphics._xQueue._iMqueue);
+    mq_close(_ctx->_inputs._xQueue._iMqueue);
     return 0;
 
 error:
@@ -166,8 +172,8 @@ static int handler(struct solutionCtrlBlock_t *_blk)
 
 static int epilogue(struct solutionCtrlBlock_t *_blk)
 {
-    struct context_t *_ctx = CTX_CAST(_blk->_data);
-    return _ctx->result;
+    free(_blk->_data);
+    return 0;
 }
 
 void *graphics_routine(void *args)
@@ -205,7 +211,8 @@ void *graphics_routine(void *args)
     if (0 > _hMq->_iMqueue)
         goto exit;
 
-    engine_draw(_grp->_eng);
+    engine_deactivate_drawing(_grp->_eng);
+    // engine_draw(_grp->_eng);
     usleep(100 * 1000);
 
     char _cMsgQueueBuffer[sizeof(queue_msg_t) + 1] = {0};
@@ -275,5 +282,9 @@ error:
     pthread_exit(NULL);
 }
 
-static struct solutionCtrlBlock_t privPart1 = {._name = CONFIG_DAY " part 1", ._prologue = prologue, ._handler = handler, ._epilogue = epilogue};
+static void free_solution(struct solutionCtrlBlock_t *_blk)
+{ 
+}
+
+static struct solutionCtrlBlock_t privPart1 = {._name = CONFIG_DAY " part 1", ._prologue = prologue, ._handler = handler, ._epilogue = epilogue, ._free = free_solution};
 struct solutionCtrlBlock_t *part1 = &privPart1;

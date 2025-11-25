@@ -25,6 +25,7 @@ struct symbol_t
     coord_t _pos;
     char _sym;
 };
+
 int engine_draw_symbol_at(aoc_2d_engine_t _eng, coord_t *_pos, char *_sym);
 struct symbol_t *eng_sym_create(struct object_t *_obj, coord_t *_rpos, char _c);
 int move_symbol(aoc_2d_engine_t _eng, coord_t *_pos, size_t _steps, AOC_2D_DIR _dir);

@@ -7,11 +7,12 @@
 
 extern int ll_suite_create();
 extern int rb_suite_create();
+extern int tree_suite_create();
 
 typedef int (*testSuite_t)(CU_pSuite arg);
 
 testSuite_t listSuite[] = {
-    ll_suite_create, rb_suite_create};
+    ll_suite_create, rb_suite_create, tree_suite_create};
 
 int main()
 {

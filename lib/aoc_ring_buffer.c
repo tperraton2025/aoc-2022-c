@@ -63,6 +63,8 @@ void aoc_ring_buffer_free(aoc_ring_buffer_t _pxRbuf)
         if (_pxRbuf->_pv_buff[_index])
             free(_pxRbuf->_pv_buff[_index]);
     }
+    free(_pxRbuf->_pv_buff);
+    free(_pxRbuf);
 }
 
 int aoc_ring_buffer_send_front(aoc_ring_buffer_t _pxRbuf, void *_item)

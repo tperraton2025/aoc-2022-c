@@ -35,7 +35,8 @@ void ll_node_remove(aoc_linked_list_handle_t _ctx, struct ll_node_t *_a);
 size_t aoc_ll_size(aoc_linked_list_handle_t _ctx);
 int ll_find_node(aoc_linked_list_handle_t _blk, struct ll_node_t *_a);
 struct ll_node_t *ll_find_node_by_property(aoc_linked_list_handle_t _blk, void *_prop, bool (*equal)(void *_a, void *_b));
-size_t ll_count_nodes_by_property(aoc_linked_list_handle_t _blk, void *_prop, bool (*equal)(void *_a, void *_b));;
+size_t ll_count_nodes_by_property(aoc_linked_list_handle_t _blk, void *_prop, bool (*equal)(void *_a, void *_b));
+
 #define LL_DECLARE(_type) \
     struct _type *_prev;  \
     struct _type *_next;

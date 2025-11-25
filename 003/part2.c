@@ -43,6 +43,9 @@ static void print_arr(struct letter_map_t *_map)
 static int prologue(struct solutionCtrlBlock_t *_blk)
 {
     _blk->_data = malloc(sizeof(struct context_t));
+    if (!_blk->_data)
+        return ENOMEM;
+    memset(_blk->_data, 0, sizeof(struct context_t));
     struct context_t *_ctx = CTX_CAST(_blk->_data);
 
     memset(&_ctx->_a[0], 0, sizeof(struct letter_map_t));
@@ -106,8 +109,15 @@ static int handler(struct solutionCtrlBlock_t *_blk)
 
 static int epilogue(struct solutionCtrlBlock_t *_blk)
 {
-    return CTX_CAST(_blk->_data)->result;
+    int result = CTX_CAST(_blk->_data)->result;
+    return result;
 }
 
-static struct solutionCtrlBlock_t privPart2 = {._name = CONFIG_DAY " part 2", ._prologue = prologue, ._handler = handler, ._epilogue = epilogue};
+static void free_solution(struct solutionCtrlBlock_t *_blk)
+{
+    struct context_t *_ctx = CAST(struct context_t *, _blk->_data);
+    free(_blk->_data);
+}
+
+static struct solutionCtrlBlock_t privPart2 = {._name = CONFIG_DAY " part 2", ._prologue = prologue, ._handler = handler, ._epilogue = epilogue, ._free = free_solution};
 struct solutionCtrlBlock_t *part2 = &privPart2;

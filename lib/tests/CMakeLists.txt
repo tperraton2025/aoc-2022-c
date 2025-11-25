@@ -10,7 +10,7 @@ project(
   VERSION 0.1.0
   LANGUAGES C CXX)
 
-add_executable(${ProjectId} test_suite.c test_linked_lists.c test_ring_buffer.c)
+add_executable(${ProjectId} test_suite.c test_linked_lists.c test_ring_buffer.c test_tree.c)
 set_property(TARGET ${ProjectId} PROPERTY C_STANDARD 11)
 target_link_libraries(${ProjectId} ${CUNIT_LIBRARIES} libaochelpers)
 
@@ -27,4 +27,4 @@ add_test(NAME ${ProjectId}
          COMMAND "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/bin/${ProjectId}" --exe
                  "${ProjectId}test")
 
-add_test_regex(${ProjectId} "ll_test_suite: all tests passed")
+add_negative_test_regex(${ProjectId} "FAILED")

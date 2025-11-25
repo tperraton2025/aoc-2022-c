@@ -25,9 +25,8 @@ struct context_t
 static struct elfCal_t *elf_ctor(struct context_t *_ctx)
 {
     struct elfCal_t *_ret = malloc(sizeof(struct elfCal_t));
-
-    if (ll_node_append(&_ctx->_ll, (struct ll_node_t *)_ret))
-        goto cleanup;
+    if (!_ret)
+        return NULL;
 
     _ret->_count = _ctx->_ll._size;
     _ret->_calories = 0;
@@ -35,11 +34,16 @@ static struct elfCal_t *elf_ctor(struct context_t *_ctx)
     if (!_ret->_name)
         goto cleanup;
     sprintf(_ret->_name, "elfo%3d", _ret->_count);
+
+    if (ll_node_append(&_ctx->_ll, (struct ll_node_t *)_ret))
+        goto name;
     return _ret;
 
+name:
+    free(_ret->_name);
 cleanup:
     free(_ret);
-    return _ret;
+    return NULL;
 }
 
 static void freeElf(void *_data)
@@ -55,7 +59,11 @@ static int prologue(struct solutionCtrlBlock_t *_blk)
 {
     int ret = 0;
     _blk->_data = malloc(sizeof(struct context_t));
-    struct context_t *_ctx = CAST(struct context_t*, _blk->_data);
+    if (!_blk->_data)
+        return ENOMEM;
+    memset(_blk->_data, 0, sizeof(struct context_t));
+    
+    struct context_t *_ctx = CAST(struct context_t *, _blk->_data);
     ll_blk_init(&_ctx->_ll);
 
     if (elf_ctor(_ctx))
@@ -65,7 +73,7 @@ static int prologue(struct solutionCtrlBlock_t *_blk)
 
 static int handler(struct solutionCtrlBlock_t *_blk)
 {
-    struct context_t *_ctx = CAST(struct context_t*, _blk->_data);
+    struct context_t *_ctx = CAST(struct context_t *, _blk->_data);
 
     int _cal = 0;
     if (sscanf(_blk->_str, "%d\n", &_cal))
@@ -95,16 +103,23 @@ static int handler(struct solutionCtrlBlock_t *_blk)
 static int epilogue(struct solutionCtrlBlock_t *_blk)
 {
     int result = 0, count = 0;
-    struct context_t *_ctx = CAST(struct context_t*, _blk->_data);
+    struct context_t *_ctx = CAST(struct context_t *, _blk->_data);
 
     LL_FOREACH(_node, _ctx->_ll)
     {
         if (count++ < 3)
             result += ELF_CAST(_node)->_calories;
     }
-    ll_free_all(&_ctx->_ll, freeElf);
     return result;
 }
 
-static struct solutionCtrlBlock_t privPart2 = {._name = CONFIG_DAY " part 2", ._prologue = prologue, ._handler = handler, ._epilogue = epilogue};
+static void free_solution(struct solutionCtrlBlock_t *_blk)
+{
+    struct context_t *_ctx = CAST(struct context_t *, _blk->_data);
+    struct data_t *_data = CAST(struct data_t *, _blk->_data);
+    ll_free_all(&_ctx->_ll, freeElf);
+    free(_blk->_data);
+}
+
+static struct solutionCtrlBlock_t privPart2 = {._name = CONFIG_DAY " part 2", ._prologue = prologue, ._handler = handler, ._epilogue = epilogue, ._free = free_solution};
 struct solutionCtrlBlock_t *part2 = &privPart2;
