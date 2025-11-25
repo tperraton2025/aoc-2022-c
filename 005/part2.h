@@ -33,7 +33,7 @@ static int crate_change_lane(aoc_context_t _ctx, command_t *_cmd);
 static int crate_deposit(aoc_context_t _ctx, command_t *_cmd);
 static int crane_action(aoc_context_t _ctx);
 
-static void aoc_spell_ans(struct context_t *_ctx);
+static void aoc_spell_ans(struct solutionCtrlBlock_t *_blk);
 
 static struct parser_t _block = {._name = "block", ._parseRegx = "[%c]", ._func = block_parser};
 static struct parser_t _cmd = {._name = "command", ._parseRegx = "move %d from %d to %d", ._func = command_parser};

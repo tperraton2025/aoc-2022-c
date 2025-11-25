@@ -28,6 +28,7 @@ static int handler(struct solutionCtrlBlock_t *_blk)
 
 static int epilogue(struct solutionCtrlBlock_t *_blk)
 {    int result = CTX_CAST(_blk->_data)->result;
+    aoc_ans("AOC 2022 %s solution is %d", _blk->_name, result);
     return result;
 }
 

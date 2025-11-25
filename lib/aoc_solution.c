@@ -41,10 +41,10 @@ int aocSolution(const char *_inPath, struct solutionCtrlBlock_t *_sol)
         if (ret)
             goto error;
     }
-    int epilogue = _sol->_epilogue(_sol);
-    aoc_ans("AOC 2022 %s solution is %d", _sol->_name, epilogue);
     fclose(_pxfile);
+    _sol->_epilogue(_sol);
     _sol->_free(_sol);
+    aoc_info("AOC 2022 %s exited with code %d", _sol->_name, ret);
     return ret;
 error:
     fclose(_pxfile);

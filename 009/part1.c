@@ -210,9 +210,10 @@ static int epilogue(struct solutionCtrlBlock_t *_blk)
         coord_tracker_t *_npos = CAST(coord_tracker_t *, pos_node);
         engine_draw_symbol_at(_ctx->_eng, &_npos->_pos, "#");
     }
-
-    int result = _ctx->result;
-    return result;
+    
+    _ctx->result = aoc_ll_size(&_ctx->_tailPos);
+    aoc_ans("AOC 2022 %s solution is %d", _blk->_name, _ctx->result);
+    return 0;
 }
 
 static void free_solution(struct solutionCtrlBlock_t *_blk)

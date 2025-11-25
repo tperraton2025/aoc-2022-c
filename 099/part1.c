@@ -172,6 +172,7 @@ static int handler(struct solutionCtrlBlock_t *_blk)
 
 static int epilogue(struct solutionCtrlBlock_t *_blk)
 {
+    aoc_ans("AOC 2022 %s solution is %d", _blk->_name, 0);
     free(_blk->_data);
     return 0;
 }

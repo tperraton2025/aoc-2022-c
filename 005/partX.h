@@ -1,6 +1,7 @@
 
 #define SLEEP_TIME_MS (0)
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct command_t
 {
@@ -15,6 +16,7 @@ static command_t *command_ctor(command_t *_ncmd)
     command_t *ret = malloc(sizeof(struct command_t));
     if (!ret)
         return NULL;
+    memset(ret, 0, sizeof(struct command_t));
     ret->count = _ncmd->count;
     ret->from = _ncmd->from;
     ret->to = _ncmd->to;

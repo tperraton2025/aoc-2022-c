@@ -110,6 +110,7 @@ static int epilogue(struct solutionCtrlBlock_t *_blk)
         if (count++ < 3)
             result += ELF_CAST(_node)->_calories;
     }
+    aoc_ans("AOC 2022 %s solution is %d", _blk->_name, result);
     return result;
 }
 

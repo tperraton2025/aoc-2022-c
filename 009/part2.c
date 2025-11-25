@@ -236,6 +236,7 @@ static int epilogue(struct solutionCtrlBlock_t *_blk)
         engine_draw_symbol_at(_ctx->_eng, &_npos->_pos, "#");
     }
     int result = aoc_ll_size(&_ctx->_tailPos);
+    aoc_ans("AOC 2022 %s solution is %d", _blk->_name, result);
 
     return result;
 }

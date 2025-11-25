@@ -107,6 +107,7 @@ static int epilogue(struct solutionCtrlBlock_t *_blk)
 {
     struct data_t *_data = CAST(struct data_t *, _blk->_data);
     int result = _data->_maxCalories;
+    aoc_ans("AOC 2022 %s solution is %d", _blk->_name, result);
     return result;
 }
 

@@ -2,14 +2,10 @@
 
 static int prologue(struct solutionCtrlBlock_t *_blk)
 {
-    int ret = 0;
 
     _blk->_data = malloc(sizeof(struct context_t));
     if (!_blk->_data)
-        ret = ENOMEM;
-
-    if (ret)
-        goto error;
+        return ENOMEM;
 
     struct context_t *_ctx = CTX_CAST(_blk->_data);
 
@@ -24,24 +20,21 @@ static int prologue(struct solutionCtrlBlock_t *_blk)
 
     coord_t _reso = {3, 1};
     coord_t _spce = {1, 0};
+
     _ctx->_eng = engine_create(_reso, _spce, '~');
-    engine_deactivate_drawing(_ctx->_eng);
     if (_ctx->_eng)
         goto success;
 
-    _block._arg = _blk;
-    _cmd._arg = _blk;
-
-    ret = ENOMEM;
     goto cleanup;
 
 success:
+    engine_deactivate_drawing(_ctx->_eng);
     return 0;
 
 cleanup:
     free(_blk->_data);
 error:
-    return ret;
+    return ENOMEM;
 }
 
 static int handler(struct solutionCtrlBlock_t *_blk)
@@ -61,9 +54,7 @@ static int epilogue(struct solutionCtrlBlock_t *_blk)
     aoc_engine_resize_one_direction(_ctx->_eng, 50, AOC_DIR_DOWN);
     engine_draw(_ctx->_eng);
     crane_action(_ctx);
-    aoc_spell_ans(_ctx);
-
-    aoc_ans("AOC 2022 %s solution is %s", _blk->_name, _ctx->spelling);
+    aoc_spell_ans(_blk);
 
     int ret = _ctx->result;
     return ret;
@@ -73,7 +64,6 @@ static void free_solution(struct solutionCtrlBlock_t *_blk)
 {
     struct context_t *_ctx = CAST(struct context_t *, _blk->_data);
     engine_free(_ctx->_eng);
-    free(_ctx->spelling);
     free(_blk->_data);
 }
 
@@ -260,8 +250,9 @@ static int crane_action(struct context_t *_ctx)
     return 0;
 }
 
-static void aoc_spell_ans(struct context_t *_ctx)
+static void aoc_spell_ans(struct solutionCtrlBlock_t *_blk)
 {
+    struct context_t *_ctx = CAST(struct context_t *, _blk->_data);
     aoc_2d_object_t _grippedObj = NULL;
     size_t _colCount = aoc_engine_get_boundaries(_ctx->_eng)._x + 1;
     _ctx->spelling = malloc(_colCount);
@@ -278,4 +269,6 @@ static void aoc_spell_ans(struct context_t *_ctx)
         _p += sprintf(_p, "%c", aoc_engine_get_obj_name(_grippedObj)[1]);
         crate_deposit(_ctx, &_spell1);
     }
+    aoc_ans("AOC 2022 %s solution is %s", _blk->_name, _ctx->spelling);
+    free(_ctx->spelling);
 }
