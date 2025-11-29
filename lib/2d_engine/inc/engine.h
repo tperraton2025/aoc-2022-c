@@ -44,6 +44,7 @@ struct ascii_2d_engine
     size_t _PrivStatLine;
     size_t _prompter;
     bool _mustDraw;
+    size_t _delay;
 };
 int engine_resize(struct ascii_2d_engine *_eng, coord_t _ns);
 int engine_move_cursor(struct ascii_2d_engine *_eng, coord_t _coord);

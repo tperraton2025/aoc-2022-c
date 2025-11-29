@@ -4,6 +4,10 @@
 #include <stdarg.h>
 #include "aoc_types.h"
 
+void eng_set_refresh_delay(aoc_2d_engine_h _eng, size_t delay){
+    _eng->_delay = delay;
+}
+
 int engine_draw_box(struct ascii_2d_engine *_eng)
 {
     int ret = 0;

@@ -6,11 +6,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct aoc_stack* aoc_stack_h;
+typedef struct aoc_stack *aoc_stack_h;
 
 aoc_stack_h aoc_stack_init(void (*_free)(void *args), size_t _size);
 int aoc_stack_push(aoc_stack_h _stkh, void *_new);
 int aoc_stack_pop(aoc_stack_h _stkh, void *_item);
-void aoc_stack_free(void* _stkh);
+void aoc_stack_free(void *_stkh);
 
 #endif

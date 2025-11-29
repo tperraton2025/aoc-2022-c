@@ -28,7 +28,7 @@ int aoc_parser_append(aoc_ll_head_h _ll, const aoc_parser_h const _prs)
 
     sprintf(_nprs->_name, NAME_FMT, _prs->_name);
 
-    _nprs->_parseRegx = _prs->_parseRegx; 
+    _nprs->_parseRegx = _prs->_parseRegx;
 
     ret = dll_node_append(_ll, NODE_CAST(_nprs));
     if (ret)

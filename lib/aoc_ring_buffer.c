@@ -25,7 +25,7 @@ aoc_ring_buffer_h aoc_ring_buffer(size_t _size, size_t _len)
         return NULL;
 
     _ret->_u_cell_dim = _size;
-    _ret->_u_arr_dim = _len; 
+    _ret->_u_arr_dim = _len;
 
     _ret->_pv_buff = malloc(sizeof(void *) * _ret->_u_arr_dim);
 

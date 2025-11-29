@@ -65,15 +65,16 @@ static void freeAllElves(struct elfCal_t *_first)
     }
 }
 
-static int prologue(struct solutionCtrlBlock_t *_blk)
+static int prologue(struct solutionCtrlBlock_t *_blk, int argc, char *argv[])
 {
     _blk->_data = malloc(sizeof(struct data_t));
     if (!_blk->_data)
         return ENOMEM;
-    memset(_blk->_data, 0 , sizeof(struct data_t));
+    memset(_blk->_data, 0, sizeof(struct data_t));
     struct data_t *_pd = CAST(struct data_t *, _blk->_data);
     _pd->_first = elfCtor(NULL);
-    if (!_pd->_first){
+    if (!_pd->_first)
+    {
         free(_blk->_data);
         return ENOMEM;
     }

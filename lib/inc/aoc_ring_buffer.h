@@ -7,7 +7,6 @@
 #define FOREACHCELL(_index, _buffer) \
     for (size_t _index = 0; _index < _buffer->_u_arr_dim; _index++)
 
-
 typedef struct ring_buffer *aoc_ring_buffer_h;
 
 aoc_ring_buffer_h aoc_ring_buffer(size_t _size, size_t _len);

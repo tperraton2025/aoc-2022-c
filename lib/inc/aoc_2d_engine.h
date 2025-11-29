@@ -20,7 +20,7 @@
 #define SYM_CAST(_p) ((struct symbol_t *)_p)
 #define aoc_engine_prompt_multistr(_eng, _sleep, ...)                                 \
     {                                                                                 \
-        const char *_str[] = {__VA_ARGS__};                                                 \
+        const char *_str[] = {__VA_ARGS__};                                           \
         aoc_engine_prompt(_eng, _sleep, sizeof(_str) / sizeof(_str[0]), __VA_ARGS__); \
     }
 
@@ -52,6 +52,7 @@ typedef struct object *aoc_2d_object_h;
 
 aoc_2d_engine_h engine_create(coord_t _res, coord_t _spce, char _void_sym);
 void eng_obj_free(void *_data);
+void eng_set_refresh_delay(aoc_2d_engine_h _eng, size_t delay);
 int engine_draw_objects(aoc_2d_engine_h _eng, coord_t *_corner);
 int draw_object(struct ascii_2d_engine *_eng, struct object *_obj, char *_fmt);
 

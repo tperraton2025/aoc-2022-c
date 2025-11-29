@@ -23,7 +23,6 @@ struct context
 #define MOV_CAST(_p) ((movement_t *)_p)
 #define MAP_MID_SIZE (1024)
 
-
 static AOC_2D_DIR char_to_AOC_DIR(char *_c)
 {
     switch (*_c)
@@ -80,7 +79,7 @@ static int track_tail(struct solutionCtrlBlock_t *_blk, coord_t *_pos)
     return EALREADY;
 }
 
-static int prologue(struct solutionCtrlBlock_t *_blk)
+static int prologue(struct solutionCtrlBlock_t *_blk, int argc, char *argv[])
 {
     int ret = 1;
     _blk->_data = malloc(sizeof(struct context));
@@ -226,7 +225,7 @@ static int epilogue(struct solutionCtrlBlock_t *_blk)
             {
                 aoc_2d_object_h _tail = CAST(aoc_2d_object_h, _node);
                 int_refresh_link(_blk, _ctx->_lastMovedLink, _tail, nmov->dir);
-            } 
+            }
         }
     }
 
@@ -241,14 +240,13 @@ static int epilogue(struct solutionCtrlBlock_t *_blk)
     return result;
 }
 
-
 static void free_solution(struct solutionCtrlBlock_t *_blk)
 {
     struct context *_ctx = CAST(struct context *, _blk->_data);
     engine_free(_ctx->_eng);
     dll_free_all(&_ctx->_tailPos, free);
-    dll_free_all(&_ctx->_movs, free); 
-    free(_blk->_data); 
+    dll_free_all(&_ctx->_movs, free);
+    free(_blk->_data);
 }
 
 static struct solutionCtrlBlock_t privPart2 = {._name = CONFIG_DAY " part 2", ._prologue = prologue, ._handler = handler, ._epilogue = epilogue, ._free = free_solution};

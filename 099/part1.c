@@ -127,7 +127,7 @@ void queue_setup(struct context *_ctx, _hQueue_t *_pxQueue, const char *_name)
     _ctx->_hMqueues[_ctx->_hMq_top++] = _pxQueue;
 }
 
-static int prologue(struct solutionCtrlBlock_t *_blk)
+static int prologue(struct solutionCtrlBlock_t *_blk, int argc, char *argv[])
 {
     int ret = 1;
     _blk->_data = malloc(sizeof(struct context));
@@ -284,7 +284,7 @@ error:
 }
 
 static void free_solution(struct solutionCtrlBlock_t *_blk)
-{ 
+{
 }
 
 static struct solutionCtrlBlock_t privPart1 = {._name = CONFIG_DAY " part 1", ._prologue = prologue, ._handler = handler, ._epilogue = epilogue, ._free = free_solution};

@@ -80,7 +80,7 @@ static int track_tail(struct solutionCtrlBlock_t *_blk, coord_t *_pos)
     return EALREADY;
 }
 
-static int prologue(struct solutionCtrlBlock_t *_blk)
+static int prologue(struct solutionCtrlBlock_t *_blk, int argc, char *argv[])
 {
     int ret = 1;
     _blk->_data = malloc(sizeof(struct context));
@@ -210,7 +210,7 @@ static int epilogue(struct solutionCtrlBlock_t *_blk)
         coord_tracker_t *_npos = CAST(coord_tracker_t *, pos_node);
         engine_draw_symbol_at(_ctx->_eng, &_npos->_pos, "#");
     }
-    
+
     _ctx->result = aoc_dll_size(&_ctx->_tailPos);
     aoc_ans("AOC 2022 %s solution is %d", _blk->_name, _ctx->result);
     return 0;

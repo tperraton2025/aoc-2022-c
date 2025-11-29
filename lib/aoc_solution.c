@@ -6,12 +6,11 @@
 #include <signal.h>
 #include "aoc_helpers.h"
 
-void signal_int_handler(int sig){
-
+void signal_int_handler(int sig)
+{
 }
 
-
-int aocSolution(const char *_inPath, struct solutionCtrlBlock_t *_sol)
+int aocSolution(struct solutionCtrlBlock_t *_sol, int argc, char *argv[])
 {
     int ret = 0;
     assert(_sol && "NULL solutionCtrlBlk provided by user");
@@ -22,17 +21,17 @@ int aocSolution(const char *_inPath, struct solutionCtrlBlock_t *_sol)
 
     signal(SIGINT, signal_int_handler);
 
-    FILE *_pxfile = fopen(_inPath, "r");
+    FILE *_pxfile = fopen(argv[1], "r");
     if (_pxfile == NULL)
     {
-        aoc_err("%s:%d: Error opening %s!", __func__, __LINE__, _inPath);
+        aoc_err("%s:%d: Error opening %s!", __func__, __LINE__, argv[1]);
         exit(EXIT_FAILURE);
     }
 
     char _ins[MAX_LINE_LEN] = {0};
 
     aoc_info("Welcome to AOC 2022 %s", _sol->_name);
-    if (_sol->_prologue(_sol))
+    if (_sol->_prologue(_sol, argc, argv))
         goto error;
     while (fgets(_ins, sizeof(_ins), _pxfile))
     {
@@ -51,4 +50,3 @@ error:
     _sol->_free(_sol);
     aoc_err("AOC 2022 %s failed with error %d", _sol->_name, ret);
 }
- 

@@ -1,6 +1,6 @@
 #include "part1.h"
 
-static int prologue(struct solutionCtrlBlock_t *_blk)
+static int prologue(struct solutionCtrlBlock_t *_blk, int argc, char *argv[])
 {
     _blk->_data = malloc(sizeof(struct context));
     if (!_blk->_data)
@@ -25,7 +25,18 @@ static int prologue(struct solutionCtrlBlock_t *_blk)
     goto cleanup;
 
 success:
-    engine_deactivate_drawing(_ctx->_eng);
+    size_t delay = 0;
+    if (argc >= 2)
+        for (int _iarg = 0; _iarg < argc; _iarg++)
+        {
+            if (0 == strcmp(argv[_iarg], "--nodraw"))
+                engine_deactivate_drawing(_ctx->_eng);
+            if ((0 == strcmp(argv[_iarg], "--draw-delay")) && argc > (_iarg + 1))
+                sscanf(argv[_iarg + 1], "%3lu", &delay);
+        }
+
+    eng_set_refresh_delay(_ctx->_eng, delay);
+
     return 0;
 
 cleanup:

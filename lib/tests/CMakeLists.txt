@@ -10,7 +10,8 @@ project(
   VERSION 0.1.0
   LANGUAGES C CXX)
 
-add_executable(${ProjectId} test_suite.c test_linked_lists.c test_ring_buffer.c test_tree.c)
+add_executable(${ProjectId} test_suite.c test_linked_lists.c test_ring_buffer.c
+                            test_tree.c)
 set_property(TARGET PROPERTY CMAKE_BUILD_TYPE DEBUG)
 set_property(TARGET ${ProjectId} PROPERTY C_STANDARD 11)
 target_link_libraries(${ProjectId} ${CUNIT_LIBRARIES} libaochelpers)

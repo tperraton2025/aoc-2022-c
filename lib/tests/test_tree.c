@@ -77,7 +77,7 @@ void tree_test_suite()
 
     CU_ASSERT(NULL == aoc_tree_search_node_by_property(&_str1->_node, (void *)"foobar is foobar 4", string_node_equal));
 
-    tree_free(&root->_node);
+    aoc_tree_free(&root->_node);
     aoc_ans("%s", "\ntree_test_suite: all tests passed");
 }
 
@@ -119,26 +119,26 @@ static int tree_node_integrity(test_string_t *_string, test_str_arr_t *_expct)
             if (_expct->_len)
             {
                 test_string_t *_child_tstr = _expct->_arr[_ii];
-                struct dll_node *_found_node = dll_find_node_by_property(&_string->_node._llchildren, _child_tstr->_str, string_node_equal);
+                struct dll_node *_found_node = dll_find_node_by_property(&_string->_node._dllchildren, _child_tstr->_str, string_node_equal);
 
-                CU_ASSERT(NULL != _found_node) 
+                CU_ASSERT(NULL != _found_node)
                 if (0 == _ii)
                 {
-                    CU_ASSERT(NULL == _child_tstr->_node._llnode._prev); 
+                    CU_ASSERT(NULL == _child_tstr->_node._llnode._prev);
                 }
 
                 if (_expct->_len - 1 == _ii)
                     CU_ASSERT(NULL == _child_tstr->_node._llnode._next);
 
-                CU_ASSERT(_child_tstr->_node._parent == &_string->_node); 
+                CU_ASSERT(_child_tstr->_node._parent == &_string->_node);
             }
         }
     }
     else
     {
-        CU_ASSERT(0 == aoc_dll_size(&_string->_node._llchildren));
-        CU_ASSERT(NULL == _string->_node._llchildren._first);
-        CU_ASSERT(NULL == _string->_node._llchildren._last);
+        CU_ASSERT(0 == aoc_dll_size(&_string->_node._dllchildren));
+        CU_ASSERT(NULL == _string->_node._dllchildren._first);
+        CU_ASSERT(NULL == _string->_node._dllchildren._last);
     }
     for (size_t _ii = 0; _ii < _expct->_len; _ii++)
     {

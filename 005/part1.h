@@ -17,10 +17,9 @@ struct context
     aoc_2d_object_h _grippedBox;
     coord_t _pos;
     struct dll_head _cmds;
-    char* spelling;
+    char *spelling;
     int result;
 };
- 
 
 #define CTX_CAST(_p) ((struct context *)_p)
 
@@ -50,7 +49,6 @@ static int parse_all(aoc_context_h _ctx, char *_str)
     }
     return 0;
 }
- 
 
 static int block_parser(aoc_context_h _ctx, char *_str)
 {
@@ -103,4 +101,4 @@ static int command_parser(aoc_context_h _ctx, char *_str)
         return 0;
     }
     return -1;
-} 
+}

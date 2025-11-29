@@ -40,7 +40,7 @@ static void print_arr(struct letter_map_t *_map)
     aoc_info("%s", _out);
 }
 
-static int prologue(struct solutionCtrlBlock_t *_blk)
+static int prologue(struct solutionCtrlBlock_t *_blk, int argc, char *argv[])
 {
     _blk->_data = malloc(sizeof(struct context));
     if (!_blk->_data)

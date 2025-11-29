@@ -27,7 +27,7 @@ size_t score_ind_from_items(size_t mine, size_t his)
     return matrix[mine][his];
 }
 
-static int prologue(struct solutionCtrlBlock_t *_blk)
+static int prologue(struct solutionCtrlBlock_t *_blk, int argc, char *argv[])
 {
     _blk->_data = malloc(sizeof(struct context));
     if (!_blk->_data)

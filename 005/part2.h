@@ -23,8 +23,7 @@ struct context
     int result;
 };
 
-
-#define CTX_CAST(_p) ((struct context *)_p)  
+#define CTX_CAST(_p) ((struct context *)_p)
 static int block_parser(aoc_context_h _ctx, char *_str);
 static int command_parser(aoc_context_h _ctx, char *_str);
 
@@ -50,7 +49,6 @@ static int parse_all(aoc_context_h _ctx, char *_str)
     }
     return 0;
 }
-
 
 static int block_parser(aoc_context_h _ctx, char *_str)
 {
@@ -85,7 +83,7 @@ static int block_parser(aoc_context_h _ctx, char *_str)
     }
     _ctx->_pos._y++;
     return match ? 0 : -1;
-} 
+}
 
 static int command_parser(aoc_context_h _ctx, char *_str)
 {

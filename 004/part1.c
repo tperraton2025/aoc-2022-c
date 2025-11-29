@@ -22,7 +22,7 @@ static bool full_overlap(struct solutionCtrlBlock_t *_blk)
     return (A_AROUND_B(_ctx->_a, _ctx->_b)) || (A_AROUND_B(_ctx->_b, _ctx->_a));
 }
 
-static int prologue(struct solutionCtrlBlock_t *_blk)
+static int prologue(struct solutionCtrlBlock_t *_blk, int argc, char *argv[])
 {
     _blk->_data = malloc(sizeof(struct context));
     if (!_blk->_data)

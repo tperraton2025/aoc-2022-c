@@ -55,14 +55,14 @@ static void freeElf(void *_data)
     free(_elf);
 }
 
-static int prologue(struct solutionCtrlBlock_t *_blk)
+static int prologue(struct solutionCtrlBlock_t *_blk, int argc, char *argv[])
 {
     int ret = 0;
     _blk->_data = malloc(sizeof(struct context));
     if (!_blk->_data)
         return ENOMEM;
     memset(_blk->_data, 0, sizeof(struct context));
-    
+
     struct context *_ctx = CAST(struct context *, _blk->_data);
     dll_head_init(&_ctx->_ll);
 

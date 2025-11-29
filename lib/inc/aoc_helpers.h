@@ -25,7 +25,7 @@ struct solutionCtrlBlock_t
 {
     char *_name;
     char *_str;
-    int (*_prologue)(struct solutionCtrlBlock_t *_data);
+    int (*_prologue)(struct solutionCtrlBlock_t *_data, int argc, char *argv[]);
     int (*_handler)(struct solutionCtrlBlock_t *_data);
     int (*_epilogue)(struct solutionCtrlBlock_t *_data);
     void (*_free)(struct solutionCtrlBlock_t *_data);
@@ -41,6 +41,6 @@ struct solutionCtrlBlock_t
  * @param _inPath   : path to file
  * @param _func     : int returning function pointer
  */
-extern int aocSolution(const char *_inPath, struct solutionCtrlBlock_t *_sol);
+extern int aocSolution(struct solutionCtrlBlock_t *_sol, int argc, char *argv[]);
 
 #endif

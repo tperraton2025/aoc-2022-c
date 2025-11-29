@@ -105,6 +105,7 @@ int engine_draw_objects(aoc_2d_engine_h _eng, coord_t *_corner)
             draw_object(_eng, _obj, NULL);
         }
         printf("\n");
+        usleep(1000 * _eng->_delay);
     }
     return ret;
 }

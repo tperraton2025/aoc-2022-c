@@ -12,7 +12,6 @@ struct symbol_t *eng_sym_create(struct object *_obj, coord_t *_rpos, char _c)
     ret->_pos._x = _rpos->_x;
     ret->_pos._y = _rpos->_y;
     ret->_sym = _c;
-    // aoc_info("%c[%ld:%ld]", _c, _rpos->_x, _rpos->_y);
     return ret;
 }
 
@@ -112,6 +111,7 @@ int draw_object(struct ascii_2d_engine *_eng, struct object *_obj, char *_fmt)
             _sympos._x = ((_obj->_pos._x - 1) * _eng->_cellDim._x) + _sym->_pos._x + 2;
             printf(MCUR_FMT "%s%c" RESET, _sympos._y, _sympos._x, _fmt ? _fmt : "", _sym->_sym);
         }
+        usleep(1000 * _eng->_delay);
     }
     return ret;
 }

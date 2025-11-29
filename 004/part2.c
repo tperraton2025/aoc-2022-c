@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
- 
+
 struct context
 {
     struct range_t _a;
@@ -27,7 +27,7 @@ static bool partial_overlap(struct solutionCtrlBlock_t *_blk)
     return ((_ctx->_a._max >= _ctx->_b._min) && (_ctx->_a._max <= _ctx->_b._max) || (_ctx->_a._min >= _ctx->_b._min) && (_ctx->_a._min <= _ctx->_b._max));
 }
 
-static int prologue(struct solutionCtrlBlock_t *_blk)
+static int prologue(struct solutionCtrlBlock_t *_blk, int argc, char *argv[])
 {
     _blk->_data = malloc(sizeof(struct context));
     if (!_blk->_data)
@@ -51,7 +51,7 @@ static int epilogue(struct solutionCtrlBlock_t *_blk)
     int result = CTX_CAST(_blk->_data)->result;
     aoc_ans("AOC 2022 %s solution is %d", _blk->_name, result);
     return result;
-} 
+}
 
 static void free_solution(struct solutionCtrlBlock_t *_blk)
 {

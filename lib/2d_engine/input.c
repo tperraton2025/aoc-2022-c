@@ -28,4 +28,3 @@ int aoc_inputs_ansi_to_dir(const char *const _str, AOC_2D_DIR *_dir)
             return EINVAL;
         }
 }
- 
