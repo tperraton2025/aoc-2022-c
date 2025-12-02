@@ -25,5 +25,6 @@ ex: 2022 day 001
     $ build/bin/2022day001 2022/001/data/test1.txt --draw-delay 50
 
 to have time to see the puzzle unfold, --draw-delay x must be specified (in ms)
+
 Note: I am reforging this library to support future problems better, so it is not working at the moment.
 Gifs are in their respective folders as an apology while I finish the work in progress.
