@@ -1,7 +1,7 @@
 # Advent of Code 2022 solutions in C.
 
 I want to facilitate the resolution of the problems using custom libraries and unit tests.
-Since recurent problems involve data structures, algorithms and 2d puzzles, 
+Since recurent problems involve data structures, algorithms and 2d puzzles, I created libraries in /lib with tree, double linked list, stack, ring buffers, parsers... and still continuing.
 
 
 To run : 
