@@ -17,8 +17,8 @@ struct dll_head
     size_t _size;
 };
 
-typedef struct dll_head *aoc_ll_head_h;
-typedef struct dll_head aoc_ll_head_t;
+typedef struct dll_head *dll_head_h;
+typedef struct dll_head dll_head_t;
 
 struct dll_node
 {
@@ -37,22 +37,22 @@ typedef struct dll_node *(dll_compare)(struct dll_node * _a, struct dll_node *_b
 
 typedef struct string_dll_node *string_dll_node_h;
 
-void dll_head_init(aoc_ll_head_h head);
-void dll_sort(aoc_ll_head_h head, dll_compare(*comp));
-void dll_free_all(aoc_ll_head_h head, void (*_caller)(void *_data));
+void dll_head_init(dll_head_h head);
+void dll_sort(dll_head_h head, dll_compare(*comp));
+void dll_free_all(dll_head_h head, void (*_caller)(void *_data));
 
-int dll_node_append(aoc_ll_head_h head, struct dll_node *_new);
-int dll_find_node(aoc_ll_head_h head, struct dll_node *_a);
-int dll_node_sorted_insert(aoc_ll_head_h head, struct dll_node *_new, dll_compare sort);
+int dll_node_append(dll_head_h head, struct dll_node *_new);
+int dll_find_node(dll_head_h head, struct dll_node *_a);
+int dll_node_sorted_insert(dll_head_h head, struct dll_node *_new, dll_compare sort);
 
-void dll_node_permut(aoc_ll_head_h head, struct dll_node *_a, struct dll_node *_b);
-void dll_node_insert(aoc_ll_head_h head, struct dll_node *_a, struct dll_node *_b);
-void dll_node_disconnect(aoc_ll_head_h head, struct dll_node *_a);
+void dll_node_permut(dll_head_h head, struct dll_node *_a, struct dll_node *_b);
+void dll_node_insert(dll_head_h head, struct dll_node *_a, struct dll_node *_b);
+void dll_node_disconnect(dll_head_h head, struct dll_node *_a);
 
-size_t aoc_dll_size(aoc_ll_head_h head);
-size_t dll_count_nodes_by_property(aoc_ll_head_h head, void *_prop, bool (*equal)(void *_a, void *_b));
+size_t dll_size(dll_head_h head);
+size_t dll_count_nodes_by_property(dll_head_h head, void *_prop, bool (*equal)(void *_a, void *_b));
 
-struct dll_node *dll_find_node_by_property(aoc_ll_head_h head, void *_prop, bool (*equal)(void *_a, void *_b));
+struct dll_node *dll_find_node_by_property(dll_head_h head, void *_prop, bool (*equal)(void *_a, void *_b));
 
 #define DLL_DECLARE(_type) \
     struct dll_node _node;

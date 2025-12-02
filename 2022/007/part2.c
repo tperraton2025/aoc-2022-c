@@ -8,7 +8,7 @@
 
 struct context
 {
-    aoc_parser_h _parsers[3];
+    dll_head_t _parsers;
     size_t _usedmem;
     fdir_t *_cdir;
     fdir_t *_root;
@@ -18,22 +18,19 @@ struct context
 
 #define CTX_CAST(_p) ((struct context *)_p)
 
-static struct parser _cmd_parser = {._name = "cmd parser", ._parseRegx = "$ %s %s", ._func = command_parser};
-static struct parser _file_parser = {._name = "file parser", ._parseRegx = "%ld %s.%s", ._func = file_parser};
-static struct parser _dir_parser = {._name = "dir parser", ._parseRegx = "%%s %s", ._func = dir_parser};
-
 static int prologue(struct solutionCtrlBlock_t *_blk, int argc, char *argv[])
 {
-    aoc_info("Welcome to AOC %s %s", CONFIG_YEAR,  _blk->_name);
+    aoc_info("Welcome to AOC %s %s", CONFIG_YEAR, _blk->_name);
     _blk->_data = malloc(sizeof(struct context));
     struct context *_ctx = CTX_CAST(_blk->_data);
 
     _ctx->_root = dir("root", NULL);
     _ctx->_cdir = _ctx->_root;
 
-    _ctx->_parsers[0] = &_cmd_parser;
-    _ctx->_parsers[2] = &_dir_parser;
-    _ctx->_parsers[1] = &_file_parser;
+    dll_head_init(&_ctx->_parsers);
+    parser_append(&_ctx->_parsers, &cmdparser, _ctx);
+    parser_append(&_ctx->_parsers, &fileparser, _ctx);
+    parser_append(&_ctx->_parsers, &dirparser, _ctx);
 
     _ctx->_usedmem = 0;
     _ctx->result = 0;
@@ -43,7 +40,7 @@ static int prologue(struct solutionCtrlBlock_t *_blk, int argc, char *argv[])
 static int handler(struct solutionCtrlBlock_t *_blk)
 {
     struct context *_ctx = CTX_CAST(_blk->_data);
-    parse_all(_ctx, _blk->_str);
+    parse_all(&_ctx->_parsers, _blk->_str);
     return 0;
 }
 
@@ -51,7 +48,6 @@ static int epilogue(struct solutionCtrlBlock_t *_blk)
 {
     struct context *_ctx = CTX_CAST(_blk->_data);
     get_mem(&_ctx->_root->path);
-    // aoc_tree_foreach_node(&_ctx->_root->path, ls);
 
     size_t available_mem = 70000000 - _ctx->_root->size;
     size_t mem_to_free = available_mem < 30000000 ? 30000000 - available_mem : 0;
@@ -76,8 +72,9 @@ static void free_solution(struct solutionCtrlBlock_t *_blk)
 static struct solutionCtrlBlock_t privPart2 = {._name = CONFIG_DAY " part 2", ._prologue = prologue, ._handler = handler, ._epilogue = epilogue, ._free = free_solution};
 struct solutionCtrlBlock_t *part2 = &privPart2;
 
-static int command_parser(aoc_context_h _ctx, char *_str)
+static int parsecommand(void *arg, char *_str)
 {
+    aoc_context_h _ctx = (aoc_context_h)arg;
     int match = 0;
     char _cmd[MAX_NAME_LEN_AS_USIZE + 1] = {0};
     char _arg[MAX_NAME_LEN_AS_USIZE + 1] = {0};
@@ -112,8 +109,9 @@ static int command_parser(aoc_context_h _ctx, char *_str)
     return EINVAL;
 }
 
-static int file_parser(aoc_context_h _ctx, char *_str)
+static int parsefile(void *arg, char *_str)
 {
+    aoc_context_h _ctx = (aoc_context_h)arg;
     int match = 0;
     size_t _nfsize = 0;
     char _fullname[MAX_NAME_LEN_AS_USIZE] = {0};
@@ -132,8 +130,9 @@ static int file_parser(aoc_context_h _ctx, char *_str)
     return EINVAL;
 }
 
-static int dir_parser(aoc_context_h _ctx, char *_str)
+static int parsedir(void *arg, char *_str)
 {
+    aoc_context_h _ctx = (aoc_context_h)arg;
     int match = 0;
     char _dirname[16] = {0};
 
@@ -145,12 +144,4 @@ static int dir_parser(aoc_context_h _ctx, char *_str)
         return 0;
     }
     return EINVAL;
-}
-
-int parse_all(aoc_context_h _ctx, char *_str)
-{
-    for (size_t _ii = 0; _ii < ARRAY_DIM(_ctx->_parsers); _ii++)
-    {
-        _ctx->_parsers[_ii]->_func(_ctx, _str);
-    }
 }

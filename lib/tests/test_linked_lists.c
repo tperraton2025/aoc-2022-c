@@ -55,7 +55,7 @@ void ll_test_suite()
         dll_node_append(&_ll, (struct dll_node *)_strings[_ii]);
     }
 
-    CU_ASSERT(aoc_dll_size(&_ll) == 4);
+    CU_ASSERT(dll_size(&_ll) == 4);
     CU_ASSERT(TS_CAST(_ll._first->_prev) == NULL);
 
     CU_ASSERT(TS_CAST(_ll._last) == _str4);
@@ -68,7 +68,7 @@ void ll_test_suite()
 
     dll_node_disconnect(&_ll, _ll._first->_next);
 
-    CU_ASSERT(aoc_dll_size(&_ll) == 3);
+    CU_ASSERT(dll_size(&_ll) == 3);
     CU_ASSERT(TS_CAST(_ll._first->_prev) == NULL);
 
     CU_ASSERT(TS_CAST(_ll._last) == _str4);
@@ -81,7 +81,7 @@ void ll_test_suite()
 
     dll_node_permut(&_ll, _ll._first, _ll._last);
 
-    CU_ASSERT(aoc_dll_size(&_ll) == 3);
+    CU_ASSERT(dll_size(&_ll) == 3);
     CU_ASSERT(TS_CAST(_ll._first->_prev) == NULL);
 
     CU_ASSERT(TS_CAST(_ll._last) == _str1);
@@ -94,7 +94,7 @@ void ll_test_suite()
 
     dll_node_insert(&_ll, &_str2->_node, _ll._last);
 
-    CU_ASSERT(aoc_dll_size(&_ll) == 4);
+    CU_ASSERT(dll_size(&_ll) == 4);
     CU_ASSERT(TS_CAST(_ll._first->_prev) == NULL);
 
     CU_ASSERT(TS_CAST(_ll._first) == _str4);

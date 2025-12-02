@@ -136,7 +136,7 @@ static int tree_node_integrity(test_string_t *_string, test_str_arr_t *_expct)
     }
     else
     {
-        CU_ASSERT(0 == aoc_dll_size(&_string->_node._dllchildren));
+        CU_ASSERT(0 == dll_size(&_string->_node._dllchildren));
         CU_ASSERT(NULL == _string->_node._dllchildren._first);
         CU_ASSERT(NULL == _string->_node._dllchildren._last);
     }

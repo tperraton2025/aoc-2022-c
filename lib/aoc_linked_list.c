@@ -3,7 +3,7 @@
 #include <errno.h>
 #include <assert.h>
 
-void dll_head_init(aoc_ll_head_h head)
+void dll_head_init(dll_head_h head)
 {
     head->_first = NULL;
     head->_current = NULL;
@@ -11,7 +11,7 @@ void dll_head_init(aoc_ll_head_h head)
     head->_size = 0;
 }
 
-void dll_free_all(aoc_ll_head_h head, void (*_caller)(void *_data))
+void dll_free_all(dll_head_h head, void (*_caller)(void *_data))
 {
     assert(head && "Linked list context is NULL");
     struct dll_node *_current = head->_first;
@@ -33,13 +33,13 @@ end:
     assert(head->_size == 0 && "the link list was probably broken");
 }
 
-size_t aoc_dll_size(aoc_ll_head_h head)
+size_t dll_size(dll_head_h head)
 {
     assert(head);
     return head->_size;
 }
 
-int dll_node_append(aoc_ll_head_h head, struct dll_node *_new)
+int dll_node_append(dll_head_h head, struct dll_node *_new)
 {
     assert(head && _new && "NULL pointer in dll_node_append");
     assert(head->_size < LL_MAX_LEN);
@@ -62,7 +62,7 @@ int dll_node_append(aoc_ll_head_h head, struct dll_node *_new)
     return 0;
 }
 
-int dll_node_sorted_insert(aoc_ll_head_h head, struct dll_node *_new, dll_compare sort)
+int dll_node_sorted_insert(dll_head_h head, struct dll_node *_new, dll_compare sort)
 {
     assert(head && _new && "NULL pointer in dll_node_append");
     if (head->_size > LL_MAX_LEN)
@@ -83,7 +83,7 @@ int dll_node_sorted_insert(aoc_ll_head_h head, struct dll_node *_new, dll_compar
     return 0;
 }
 
-void dll_node_permut(aoc_ll_head_h head, struct dll_node *_a, struct dll_node *_b)
+void dll_node_permut(dll_head_h head, struct dll_node *_a, struct dll_node *_b)
 {
     struct dll_node *_anext = _a->_next;
     struct dll_node *_aprev = _a->_prev;
@@ -111,7 +111,7 @@ void dll_node_permut(aoc_ll_head_h head, struct dll_node *_a, struct dll_node *_
         _b->_next->_prev = _b;
 }
 
-void dll_node_insert(aoc_ll_head_h head, struct dll_node *_a, struct dll_node *_b)
+void dll_node_insert(dll_head_h head, struct dll_node *_a, struct dll_node *_b)
 {
     assert(head && "Linked list head NULL");
     assert(_a && "Linked list _a is NULL");
@@ -128,7 +128,7 @@ void dll_node_insert(aoc_ll_head_h head, struct dll_node *_a, struct dll_node *_
 }
 
 /*  Takes out node from the list without freeing its*/
-void dll_node_disconnect(aoc_ll_head_h head, struct dll_node *_a)
+void dll_node_disconnect(dll_head_h head, struct dll_node *_a)
 {
     assert(head->_size != 0 && "attempt to remove link from an empty sinked list");
     assert(_a && "NULL pointer provided");
@@ -146,7 +146,7 @@ void dll_node_disconnect(aoc_ll_head_h head, struct dll_node *_a)
     _a->_next = NULL;
 }
 
-int dll_find_node(aoc_ll_head_h head, struct dll_node *_a)
+int dll_find_node(dll_head_h head, struct dll_node *_a)
 {
     LL_FOREACH_P(_node, head)
     {
@@ -158,7 +158,7 @@ int dll_find_node(aoc_ll_head_h head, struct dll_node *_a)
     return ENOENT;
 }
 
-size_t dll_count_nodes_by_property(aoc_ll_head_h head, void *_prop, bool (*equal)(void *_a, void *_b))
+size_t dll_count_nodes_by_property(dll_head_h head, void *_prop, bool (*equal)(void *_a, void *_b))
 {
     size_t ret = 0;
     bool _found = false;
@@ -173,7 +173,7 @@ size_t dll_count_nodes_by_property(aoc_ll_head_h head, void *_prop, bool (*equal
     return ret;
 }
 
-struct dll_node *dll_find_node_by_property(aoc_ll_head_h head, void *_prop, bool (*equal)(void *_a, void *_b))
+struct dll_node *dll_find_node_by_property(dll_head_h head, void *_prop, bool (*equal)(void *_a, void *_b))
 {
     bool _found = false;
     if (!head || !equal)
@@ -188,7 +188,7 @@ struct dll_node *dll_find_node_by_property(aoc_ll_head_h head, void *_prop, bool
 }
 
 // TODO: finish this
-void dll_sort(aoc_ll_head_h head, dll_compare(*comp))
+void dll_sort(dll_head_h head, dll_compare(*comp))
 {
     LL_FOREACH_P(_node, head)
     {

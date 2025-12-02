@@ -3,43 +3,37 @@
 #include <aoc_parser.h>
 #include <assert.h>
 
-void aoc_parser_free(void *_data)
+void parser_free(void *_data)
 {
-    aoc_parser_h _pars = CAST(aoc_parser_h, _data);
+    parser_h _pars = CAST(parser_h, _data);
     FREE_AND_CLEAR_P(_pars->_name);
     FREE_AND_CLEAR_P(_pars);
 }
 
-int aoc_parser_append(aoc_ll_head_h _ll, const aoc_parser_h const _prs)
+int parser_append(dll_head_h _ll, parser_h parser, void *arg)
 {
     int ret = 0;
-    if (!_prs || !_ll)
+    if (!parser || !_ll)
         return EINVAL;
 
-    aoc_parser_h _nprs = malloc(sizeof(struct parser));
-    if (!_nprs)
-        return ENOMEM;
-
-    _nprs->_name = malloc(sizeof(char) * strnlen(_prs->_name, ABSOLUTE_MAX_NAME_LEN));
-    if (!_nprs->_name)
-        ret = ENOMEM;
-    if (ret)
-        goto error;
-
-    sprintf(_nprs->_name, NAME_FMT, _prs->_name);
-
-    _nprs->_parseRegx = _prs->_parseRegx;
-
-    ret = dll_node_append(_ll, NODE_CAST(_nprs));
+    parser->arg = arg;
+    ret = dll_node_append(_ll, &parser->_node);
     if (ret)
         goto error;
 
     return 0;
 error:
-    if (_nprs->_name)
-        FREE_AND_CLEAR_P(_nprs->_name);
-    if (_nprs)
-        FREE_AND_CLEAR_P(_nprs);
-
     return ret;
+}
+
+int parse_all(dll_head_h _ll, char *str)
+{
+    LL_FOREACH_P(_parsernode, _ll)
+    {
+        parser_h _parser = (parser_h)_parsernode;
+        _parser->_parsed = _parser->_func(_parser->arg, str);
+        if (!_parser->_parsed)
+            break;
+    }
+    return 0;
 }

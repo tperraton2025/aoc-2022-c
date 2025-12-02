@@ -33,6 +33,12 @@
 #define aoc_warn(_fmt, ...) printf(YELLOW _fmt RESET "\r\n", __VA_ARGS__);
 #define aoc_ans(_fmt, ...) printf(UGREEN _fmt RESET "\r\n", __VA_ARGS__);
 
+#define block()                                               \
+    {                                                         \
+        aoc_info("%s %s:%ld", "blocked", __FILE__, __LINE__); \
+        scanf("%*c");                                         \
+    }
+
 struct solutionCtrlBlock_t
 {
     char *_name;
