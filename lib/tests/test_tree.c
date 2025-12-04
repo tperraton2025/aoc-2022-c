@@ -28,7 +28,7 @@ typedef struct
         CU_ASSERT(0 == tree_node_integrity(_tstr, &_tsArr));                     \
     }
 
-static test_string_t *test_string(aoc_tree_node_h _parent, const char *const _str);
+static test_string_t *test_string(tree_node_h _parent, const char *const _str);
 static int tree_node_integrity(test_string_t *_node, test_str_arr_t *_expct);
 
 static void test_string_free(void *arg);
@@ -78,10 +78,10 @@ void tree_test_suite()
     CU_ASSERT(NULL == aoc_tree_search_node_by_property(&_str1->_node, (void *)"foobar is foobar 4", string_node_equal));
 
     aoc_tree_free(&root->_node);
-    aoc_ans("%s", "\ntree_test_suite: all tests passed");
+    aoc_info("%s", "\ntree_test_suite: all tests were ran");
 }
 
-static test_string_t *test_string(aoc_tree_node_h _parent, const char *const _str)
+static test_string_t *test_string(tree_node_h _parent, const char *const _str)
 {
     test_string_t *_ntstr = malloc(sizeof(test_string_t));
     assert(_ntstr && "_ntstr malloc failed");
@@ -119,7 +119,7 @@ static int tree_node_integrity(test_string_t *_string, test_str_arr_t *_expct)
             if (_expct->_len)
             {
                 test_string_t *_child_tstr = _expct->_arr[_ii];
-                struct dll_node *_found_node = dll_find_node_by_property(&_string->_node._dllchildren, _child_tstr->_str, string_node_equal);
+                dll_node_h _found_node = dll_find_node_by_property(&_string->_node._dllchildren, _child_tstr->_str, string_node_equal);
 
                 CU_ASSERT(NULL != _found_node)
                 if (0 == _ii)
