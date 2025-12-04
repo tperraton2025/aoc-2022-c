@@ -166,7 +166,7 @@ void *graphics_routine(void *args)
                 aoc_engine_step_object(_gfxtask->_eng_h, _gfxtask->_cur_h, 1LU, AOC_DIR_RIGHT, NULL);
             }
             aoc_engine_prompt(_gfxtask->_eng_h, 0, 2, "got mq", _cMsgQueueBuffer);
-            aoc_engine_list_objects(_gfxtask->_eng_h);
+            aoc_engine_prompt_obj_list(_gfxtask->_eng_h);
             printf("\n");
             mq_ret = 0;
         }
