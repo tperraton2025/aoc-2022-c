@@ -9,114 +9,99 @@ void engine_free(aoc_2d_engine_h _eng)
 {
     engine_cursor_exit_drawing_area(_eng);
     dll_free_all(&_eng->_objects, aoc_engine_free_object);
-    FREE_AND_CLEAR_P(_eng);
+    FREE(_eng);
 }
 
-aoc_2d_engine_h engine_create(coord_t partcoordmaxima, char _voidsym, size_t delay)
+aoc_2d_engine_h engine_create(coord_t *ncoordlimits, char _voidsym, size_t delay)
 {
-    aoc_2d_engine_h _ret = NULL;
-    TRY_RAII_MALLOC(_ret, sizeof(struct ascii_2d_engine));
+    aoc_2d_engine_h _eng = NULL;
+    TRY_RAII_MALLOC(_eng, sizeof(struct ascii_2d_engine));
 
-    if (!_ret)
+    if (!_eng)
         return NULL;
-    coordboundaries_t _drawboundariesmax = {._max = {._x = ABSOLUTE_MAX_X, ._x = ABSOLUTE_MAX_Y},
-                                            ._min = {._x = 1, ._y = 1}};
 
-    dll_head_init(&_ret->_objects);
+    dll_head_init(&_eng->_objects);
 
-    _ret->_delay = delay;
+    _eng->_delay = delay;
 
-    if (!COORD_RANGE_CHECK(partcoordmaxima, _drawboundariesmax))
+    if (COORD_RANGE_CHECK_P(ncoordlimits, _drawlimits))
     {
-        _ret->_drawboundaries._min._x = 1;
-        _ret->_drawboundaries._min._y = 1;
+        _eng->_partoffset._x = 2;
+        _eng->_partoffset._y = 2;
 
-        _ret->_drawboundaries._max._x = partcoordmaxima._x + 3;
-        _ret->_drawboundaries._max._y = partcoordmaxima._y + 3;
+        _eng->_drawlimits._min._x = 1;
+        _eng->_drawlimits._min._y = 1;
 
-        _ret->_partboundaries._min._x = 2;
-        _ret->_partboundaries._min._y = 2;
+        _eng->_drawlimits._max._x = ncoordlimits->_x + _eng->_partoffset._x + 1;
+        _eng->_drawlimits._max._y = ncoordlimits->_y + _eng->_partoffset._y + 1;
 
-        _ret->_partboundaries._max._x = partcoordmaxima._x + 2;
-        _ret->_partboundaries._max._y = partcoordmaxima._y + 2;
+        _eng->_coordlimits._min._x = 0;
+        _eng->_coordlimits._min._y = 0;
 
-        _ret->_cursor._x = _ret->_drawboundaries._min._x;
-        _ret->_cursor._y = _ret->_drawboundaries._min._y;
+        _eng->_coordlimits._max._x = ncoordlimits->_x;
+        _eng->_coordlimits._max._y = ncoordlimits->_y;
 
-        _ret->_voidsym = _voidsym;
+        _eng->_cursor._x = _eng->_coordlimits._min._x;
+        _eng->_cursor._y = _eng->_coordlimits._min._y;
 
-        _ret->_statLine = 2;
-        _ret->_PrivStatLine = _ret->_statLine;
+        _eng->_voidsym = _voidsym;
 
-        _ret->_enabledraw = _ret->_drawboundaries._max._x < DRAWABLE_MAX_X && _ret->_drawboundaries._max._y < DRAWABLE_MAX_Y;
-        if (!_ret->_enabledraw)
+        _eng->_statLine = 2;
+        _eng->_PrivStatLine = _eng->_statLine;
+
+        _eng->_enablecollisions = true;
+
+        _eng->_newlinecnt = _eng->_coordlimits._min._y;
+
+        _eng->_enabledraw = _eng->_drawlimits._max._x < DRAWABLE_MAX_X && _eng->_drawlimits._max._y < DRAWABLE_MAX_Y;
+        if (!_eng->_enabledraw)
             aoc_warn("%s", "drawable zone will not fit in a terminal window \n\
                 drawing is disabled until forced");
-        return _ret;
+        return _eng;
     }
     else
         goto cleanup;
 
 cleanup:
-    FREE_AND_CLEAR_P(_ret);
+    FREE(_eng);
     return NULL;
 }
 
-int engine_retract_drawing_area(struct ascii_2d_engine *_eng, move_t cellsdelta)
+int engine_extend_drawing_area(struct ascii_2d_engine *_eng, coord_t newlimits)
 {
     if (!_eng)
         return EINVAL;
-    if (cellsdelta._x >= _eng->_drawboundaries._min._x)
-        return EINVAL;
-    if (cellsdelta._y >= _eng->_drawboundaries._min._y)
-        return EINVAL;
 
-    coord_t _boundary_MAX = {._x = ABSOLUTE_MAX_X, ._y = ABSOLUTE_MAX_Y};
-    coord_t _retracttest = {._x = _eng->_drawboundaries._max._x + cellsdelta._x,
-                            ._y = _eng->_drawboundaries._max._y + cellsdelta._y};
-
-    if (!COORD_MAXIMA_CHECK(_retracttest, _boundary_MAX))
+    if (!COORD_RANGE_CHECK(newlimits, _drawlimits))
         return ERANGE;
     else
     {
-        _eng->_drawboundaries._max._x += cellsdelta._x;
-        _eng->_drawboundaries._max._y += cellsdelta._y;
+        _eng->_drawlimits._max._x = newlimits._x + _eng->_partoffset._x + 1;
+        _eng->_drawlimits._max._y = newlimits._y + _eng->_partoffset._y + 1;
 
-        _eng->_partboundaries._max._x += cellsdelta._x;
-        _eng->_partboundaries._max._y += cellsdelta._y;
+        _eng->_coordlimits._max._x = newlimits._x;
+        _eng->_coordlimits._max._y = newlimits._y;
         return 0;
     }
     return EINVAL;
 }
 
-int engine_extend_drawing_area(struct ascii_2d_engine *_eng, coord_t extracells)
+int engine_draw_part_at(aoc_2d_engine_h eng, coord_t *_pos, char *_sym)
 {
-    if (!_eng)
-        return EINVAL;
-
-    coord_t _boundary_MAX = {._x = ABSOLUTE_MAX_X, ._y = ABSOLUTE_MAX_Y};
-    coord_t _extenstiontest = {._x = _eng->_drawboundaries._max._x + extracells._x, ._y = _eng->_drawboundaries._max._y + extracells._y};
-
-    if (!COORD_MAXIMA_CHECK(_extenstiontest, _boundary_MAX))
-        return ERANGE;
-    else
+    if (eng->_enabledraw)
     {
-        _eng->_drawboundaries._max._x += extracells._x;
-        _eng->_drawboundaries._max._y += extracells._y;
-
-        _eng->_partboundaries._max._x += extracells._x;
-        _eng->_partboundaries._max._y += extracells._y;
-        return 0;
+        coord_t _pcord = {._x = _pos->_x + eng->_partoffset._x, ._y = _pos->_y + eng->_partoffset._y};
+        engine_draw_symbol_at(eng, &_pcord, _sym);
     }
-    return EINVAL;
+    return 0;
 }
 
-int engine_draw_part_at(aoc_2d_engine_h _eng, coord_t *_pos, char *_sym)
+int engine_draw_symbol_at(aoc_2d_engine_h eng, coord_t *_pos, const char *_sym)
 {
-    if (_eng->_enabledraw)
+    if (eng->_enabledraw)
     {
         printf(MCUR_FMT "%s", _pos->_y, _pos->_x, _sym);
-        engine_cursor_exit_drawing_area(_eng);
+        engine_cursor_exit_drawing_area(eng);
     }
     return 0;
 }
@@ -127,10 +112,17 @@ int engine_draw(struct ascii_2d_engine *_eng)
     printf(HOME);
     if (_eng->_enabledraw)
     {
+        assert(COORD_RANGE_CHECK(_eng->_drawlimits._max, _drawlimits));
+        assert(COORD_RANGE_CHECK(_eng->_drawlimits._min, _drawlimits));
+
+        assert(COORD_RANGE_CHECK(_eng->_coordlimits._max, _coordboundaries));
+        assert(COORD_RANGE_CHECK(_eng->_coordlimits._min, _coordboundaries));
+
         engine_draw_box(_eng);
         engine_fill_drawing_area(_eng);
         coord_t _pos = {0};
         aoc_engine_prompt_stats(_eng);
+        aoc_engine_list_objects(_eng);
         engine_draw_objects(_eng, &_pos);
         engine_put_cursor_in_footer_area(_eng);
     }
@@ -155,37 +147,36 @@ int engine_draw_objects(aoc_2d_engine_h _eng, coord_t *_corner)
 
 int aoc_engine_append_obj(aoc_2d_engine_h engine, aoc_2d_object_h newobj)
 {
-    const coord_t _prevcoordlim = {._x = engine->_partboundaries._max._x, ._y = engine->_partboundaries._max._y};
-    coord_t _newobjectXmaxYmax = {0};
     coord_t _extension = {0};
 
     LL_FOREACH(_partiter, newobj->_parts)
     {
         part_h _part = (part_h)_partiter;
-        _newobjectXmaxYmax._x = HIGHEST(_newobjectXmaxYmax._x, _part->_pos._x + engine->_partboundaries._min._x);
-        _newobjectXmaxYmax._y = HIGHEST(_newobjectXmaxYmax._y, _part->_pos._y + engine->_partboundaries._min._y);
+        _extension._x = HIGHEST(engine->_coordlimits._max._x, _part->_pos._x);
+        _extension._y = HIGHEST(engine->_coordlimits._max._y, _part->_pos._y);
     }
 
-    if (_newobjectXmaxYmax._x > _prevcoordlim._x)
-        _extension._x = _newobjectXmaxYmax._x - engine->_partboundaries._max._x;
-    if (_newobjectXmaxYmax._y > _prevcoordlim._y)
-        _extension._y = _newobjectXmaxYmax._y - engine->_partboundaries._max._y;
+    if (!COORD_RANGE_CHECK(_extension, _drawlimits))
+        return ERANGE;
 
-    if (dll_node_append(&engine->_objects, CAST(struct dll_node *, newobj)))
+    int ret = dll_node_append(&engine->_objects, CAST(dll_node_h, newobj));
+    if (ret)
     {
-        aoc_err("Failed to append %s", newobj->_name);
+        aoc_err("Failed to append %s at %s: %s", newobj->_name, strpos(&newobj->_pos), strerror(ret));
         return EINVAL;
     }
 
-    if (_extension._x || _extension._y)
+    if (_extension._x > engine->_coordlimits._max._x || _extension._y > engine->_coordlimits._max._y)
     {
-        if (engine_extend_drawing_area(engine, _extension))
+        ret = engine_extend_drawing_area(engine, _extension);
+        if (ret)
         {
             /* user has responsibility to free the unusable object */
-            dll_node_disconnect(&engine->_objects, CAST(struct dll_node *, newobj));
+            dll_node_disconnect(&engine->_objects, CAST(dll_node_h, newobj));
+            aoc_err("Failed to append %s at %s: %s", newobj->_name, strpos(&newobj->_pos), strerror(ret));
             return ERANGE;
         }
-        aoc_info("parts area extended up to x=%ld(+%ld) y=%ld(+%ld) to insert object %s", engine->_partboundaries._max._x, _extension._x, engine->_partboundaries._max._y, _extension._y, newobj->_name);
+        aoc_info("box extended %s for %s", strpos(&engine->_coordlimits._max), newobj->_name);
     }
     return 0;
 }
@@ -195,7 +186,7 @@ aoc_2d_object_h aoc_engine_get_obj_by_position(aoc_2d_engine_h _eng, coord_t *_p
 {
     LL_FOREACH(_objNode, _eng->_objects)
     {
-        object_h _object = CAST(object_h, _objNode);
+        aoc_2d_object_h _object = CAST(aoc_2d_object_h, _objNode);
 
         LL_FOREACH(_partnode, _object->_parts)
         {
@@ -208,6 +199,29 @@ aoc_2d_object_h aoc_engine_get_obj_by_position(aoc_2d_engine_h _eng, coord_t *_p
         }
     }
     return NULL;
+}
+
+/* will implement 2 methods, one by map and this one by objects linked list */
+struct dll_head *aoc_engine_list_objects_with_a_part_at_position(aoc_2d_engine_h _eng, coord_t *_pos)
+{
+    struct dll_head *_list;
+    dll_head_init(_list);
+    LL_FOREACH(_objNode, _eng->_objects)
+    {
+        aoc_2d_object_h _object = CAST(aoc_2d_object_h, _objNode);
+
+        LL_FOREACH(_partnode, _object->_parts)
+        {
+            part_h part = (part_h)_partnode;
+            coord_t *_partpos = &part->_pos;
+            if (_partpos->_x == _pos->_x && _partpos->_y == _pos->_y)
+            {
+                aoc_2d_object_ref_h _ref = aoc_2d_object_ref(_object);
+                dll_node_append(_list, &_ref->_node);
+            }
+        }
+    }
+    return _list;
 }
 
 int aoc_engine_object_fit_detect(aoc_2d_engine_h _eng, aoc_2d_object_h _obj, size_t steps, AOC_2D_DIR dir)
@@ -225,40 +239,68 @@ int aoc_engine_object_fit_detect(aoc_2d_engine_h _eng, aoc_2d_object_h _obj, siz
     return 1;
 }
 
-int aoc_engine_collision_at(aoc_2d_engine_h _eng, coord_t *_pos)
+int aoc_engine_collision_at(aoc_2d_engine_h _eng, aoc_2d_object_h excl, coord_t *_pos)
 {
     if (!_eng)
         return EINVAL;
     aoc_2d_object_h _other = aoc_engine_get_obj_by_position(_eng, _pos);
-    if (!_other)
+    if (!_other || _other == excl)
         return 0;
     if (_other->_props & OBJ_PROPERTY_NO_COLLISION)
         return 0;
-    return 1;
+    return EALREADY;
+}
+
+int aoc_engine_adapt_objects_to_extension(aoc_2d_engine_h _eng, size_t steps, AOC_2D_DIR _dir)
+{
+    int _ret = 0;
+    _eng->_enablecollisions = false;
+    _eng->_enabledraw = false;
+    LL_FOREACH(obj_node, _eng->_objects)
+    {
+        aoc_2d_object_h _objh = CAST(aoc_2d_object_h, obj_node);
+        for (size_t _it = 0; _it < steps; _it++)
+        {
+            _ret = aoc_engine_step_object(_eng, _objh, 1, _dir, NULL);
+            if (_ret)
+            {
+                engine_put_cursor_in_footer_area(_eng);
+                aoc_err("aoc_engine_step_object:%s %s", _objh->_name, strerror(_ret));
+                block();
+            }
+        }
+    }
+    _eng->_enabledraw = true;
+    _eng->_enablecollisions = true;
 }
 
 int aoc_engine_extend_one_direction(aoc_2d_engine_h _eng, size_t steps, AOC_2D_DIR _dir)
 {
+    size_t delta = steps;
     if (!_eng || _dir >= AOC_DIR_MAX)
         return EINVAL;
-
+    int _ret = 0;
     if (_dir > AOC_DIR_DOWN)
     {
-        if ((_eng->_partboundaries._max._x + steps) > ABSOLUTE_MAX_X)
+        if ((_eng->_coordlimits._max._x + steps) > ABSOLUTE_MAX_X)
             return EINVAL;
-        _eng->_partboundaries._max._x += steps;
-        _eng->_drawboundaries._max._x += steps;
+
+        _eng->_coordlimits._max._x += steps;
+        _eng->_drawlimits._max._x += steps;
+
+        if (_dir == AOC_DIR_LEFT)
+            aoc_engine_adapt_objects_to_extension(_eng, steps, AOC_DIR_RIGHT);
     }
     else
     {
-        if ((_eng->_partboundaries._max._y + steps) > ABSOLUTE_MAX_Y)
+        if ((_eng->_coordlimits._max._y + steps) > ABSOLUTE_MAX_Y)
             return EINVAL;
-        _eng->_partboundaries._max._y += steps;
-        _eng->_drawboundaries._max._y += steps;
-    }
-    LL_FOREACH(obj_node, _eng->_objects)
-    {
-        aoc_engine_step_object_and_redraw(_eng, CAST(aoc_2d_object_h, obj_node), steps, _dir, NULL);
+
+        _eng->_coordlimits._max._y += steps;
+        _eng->_drawlimits._max._y += steps;
+
+        if (_dir == AOC_DIR_UP)
+            aoc_engine_adapt_objects_to_extension(_eng, delta, AOC_DIR_DOWN);
     }
     return 0;
 }
@@ -266,7 +308,7 @@ int aoc_engine_extend_one_direction(aoc_2d_engine_h _eng, size_t steps, AOC_2D_D
 coordboundaries_t aoc_engine_get_parts_boundaries(aoc_2d_engine_h _eng)
 {
     coordboundaries_t ret = {0};
-    memcpy(&ret, &_eng->_partboundaries, sizeof(coordboundaries_t));
+    memcpy(&ret, &_eng->_coordlimits, sizeof(coordboundaries_t));
     return ret;
 }
 
@@ -293,4 +335,15 @@ void engine_activate_drawing(aoc_2d_engine_h _eng)
 void engine_deactivate_drawing(aoc_2d_engine_h _eng)
 {
     _eng->_enabledraw = false;
+}
+
+void engine_add_line(aoc_2d_engine_h _eng)
+{
+    assert(_eng->_newlinecnt < ABSOLUTE_MAX_Y);
+    _eng->_newlinecnt++;
+}
+
+size_t engine_last_line(aoc_2d_engine_h _eng)
+{
+    return _eng->_newlinecnt % ABSOLUTE_MAX_Y;
 }

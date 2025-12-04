@@ -60,12 +60,12 @@ int aoc_engine_move_object_and_redraw(aoc_2d_engine_h _eng, aoc_2d_object_h _obj
         return EINVAL;
 
     aoc_engine_erase_object(_eng, _obj);
-    struct dll_node *_part_node;
+    dll_node_h _part_node;
     part_h _sym;
     LL_FOREACH_EXT(_part_node, _obj->_parts)
     {
         _sym = CAST(part_h, _part_node);
-        move_within_box(_eng, &_sym->_pos, steps, dir);
+        move_within_coord(_eng, &_sym->_pos, steps, dir);
     }
     move_within_window(_eng, &_obj->_pos, steps, dir);
     aoc_engine_draw_object(_eng, _obj, NULL);
@@ -78,13 +78,13 @@ int aoc_engine_move_one_step_towards(aoc_2d_engine_h _eng, aoc_2d_object_h _a, c
     int ret = 0;
     coord_t current = aoc_engine_get_object_position(_eng, _a);
     if (current._x < _pos._x)
-        ret = aoc_engine_step_object_and_redraw(_eng, _a, AOC_DIR_RIGHT, NULL);
+        ret = aoc_engine_step_object(_eng, _a, AOC_DIR_RIGHT, NULL);
     if (current._x > _pos._x && !ret)
-        ret = aoc_engine_step_object_and_redraw(_eng, _a, AOC_DIR_LEFT, NULL);
+        ret = aoc_engine_step_object(_eng, _a, AOC_DIR_LEFT, NULL);
     if (current._y < _pos._y && !ret)
-        ret = aoc_engine_step_object_and_redraw(_eng, _a, AOC_DIR_DOWN, NULL);
+        ret = aoc_engine_step_object(_eng, _a, AOC_DIR_DOWN, NULL);
     if (current._y > _pos._y && !ret)
-        ret = aoc_engine_step_object_and_redraw(_eng, _a, AOC_DIR_UP, NULL);
+        ret = aoc_engine_step_object(_eng, _a, AOC_DIR_UP, NULL);
     return ret;
 }
 
@@ -98,7 +98,7 @@ int aoc_engine_try_move_object_and_redraw(aoc_2d_engine_h _eng, aoc_2d_object_h 
         return EINVAL;
 
     aoc_engine_erase_object(_eng, _obj);
-    struct dll_node *_part_node;
+    dll_node_h _part_node;
     part_h _sym;
     LL_FOREACH_EXT(_part_node, _obj->_parts)
     {

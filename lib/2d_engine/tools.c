@@ -13,26 +13,26 @@ int engine_draw_box(struct ascii_2d_engine *_eng)
 {
     int ret = 0;
 
-    coord_t _topLeft = {._x = _eng->_drawboundaries._min._x, ._y = _eng->_drawboundaries._min._y};
-    coord_t _topRight = {._x = _eng->_drawboundaries._max._x, ._y = _eng->_drawboundaries._min._y};
-    coord_t _botRight = {._x = _eng->_drawboundaries._max._x, ._y = _eng->_drawboundaries._max._y};
-    coord_t _botLeft = {._x = _eng->_drawboundaries._min._x, ._y = _eng->_drawboundaries._max._y};
+    coord_t _topLeft = {._x = _eng->_drawlimits._min._x, ._y = _eng->_drawlimits._min._y};
+    coord_t _topRight = {._x = _eng->_drawlimits._max._x, ._y = _eng->_drawlimits._min._y};
+    coord_t _botRight = {._x = _eng->_drawlimits._max._x, ._y = _eng->_drawlimits._max._y};
+    coord_t _botLeft = {._x = _eng->_drawlimits._min._x, ._y = _eng->_drawlimits._max._y};
 
     engine_fill_hv_line(_eng, &_topLeft, &_topRight, AOC_DIR_RIGHT, "═");
     engine_fill_hv_line(_eng, &_topRight, &_botRight, AOC_DIR_DOWN, "║");
     engine_fill_hv_line(_eng, &_botRight, &_botLeft, AOC_DIR_LEFT, "═");
     engine_fill_hv_line(_eng, &_botLeft, &_topLeft, AOC_DIR_UP, "║");
 
-    ret = engine_draw_part_at(_eng, &_topLeft, "╔");
+    ret = engine_draw_symbol_at(_eng, &_topLeft, "╔");
     if (ret)
         goto error;
-    ret = engine_draw_part_at(_eng, &_topRight, "╗");
+    ret = engine_draw_symbol_at(_eng, &_topRight, "╗");
     if (ret)
         goto error;
-    ret = engine_draw_part_at(_eng, &_botRight, "╝");
+    ret = engine_draw_symbol_at(_eng, &_botRight, "╝");
     if (ret)
         goto error;
-    ret = engine_draw_part_at(_eng, &_botLeft, "╚");
+    ret = engine_draw_symbol_at(_eng, &_botLeft, "╚");
     if (ret)
         goto error;
 
@@ -45,15 +45,14 @@ int engine_fill_drawing_area(struct ascii_2d_engine *_eng)
 {
     if (_eng->_enabledraw)
     {
-        for (size_t _line = _eng->_partboundaries._min._y; _line <= (_eng->_partboundaries._max._y); _line++)
+        for (size_t _line = _eng->_coordlimits._min._y; _line <= _eng->_coordlimits._max._y; _line++)
         {
-            printf(MCUR_FMT, _line, _eng->_partboundaries._min._y);
-            for (size_t _col = _eng->_partboundaries._min._x; _col <= (_eng->_partboundaries._max._x); _col++)
+            for (size_t _col = _eng->_coordlimits._min._x; _col <= _eng->_coordlimits._max._x; _col++)
             {
-                printf("%c", _eng->_voidsym);
+                coord_t _coord = {._x = _col, ._y = _line};
+                engine_draw_part_at(_eng, &_coord, &_eng->_voidsym);
             }
         }
-        engine_cursor_exit_drawing_area(_eng);
     }
 }
 
@@ -63,10 +62,11 @@ int engine_fill_hv_line(struct ascii_2d_engine *_eng, coord_t *_start, coord_t *
     {
         if (!_eng || !_start || _dir >= AOC_DIR_MAX)
             return EINVAL;
-        printf(MCUR_FMT "%s", _start->_y, _start->_x, _c);
+        engine_draw_symbol_at(_eng, _start, _c);
         put_pos(_eng, &_eng->_cursor, _start);
         do
-            printf(MCUR_FMT "%s", _eng->_cursor._y, _eng->_cursor._x, _c);
+            engine_draw_symbol_at(_eng, &_eng->_cursor, _c);
+
         while (!move_cursor_until(_eng, _dir, 1, _end));
         engine_cursor_exit_drawing_area(_eng);
     }
@@ -94,9 +94,7 @@ void aoc_engine_prompt_stats(aoc_2d_engine_h _eng)
     engine_cursor_stats(_eng);
     aoc_info("objects %ld", _eng->_objects._size);
     engine_cursor_private_next_stats(_eng);
-    aoc_info("min [%ldx%ld]", _eng->_partboundaries._min._x, _eng->_partboundaries._min._y);
-    engine_cursor_private_next_stats(_eng);
-    aoc_info("max [%ldx%ld]", _eng->_partboundaries._max._x, _eng->_partboundaries._max._y);
+    aoc_info("box size %s", strpos(&_eng->_coordlimits._max)); 
     engine_cursor_private_next_stats(_eng);
 }
 
