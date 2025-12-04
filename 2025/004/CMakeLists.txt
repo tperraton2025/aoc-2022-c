@@ -38,5 +38,5 @@ add_test(
     "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/bin/${ProjectId}"
     "${CMAKE_CURRENT_SOURCE_DIR}/data/input.txt" --exe "${ProjectId}input")
 
-add_aoc_day_test_regex(${YEAR} ${day} ${ProjectId}test   "0" "0")
-add_aoc_day_test_regex(${YEAR} ${day} ${ProjectId}input  "0" "0")
+add_aoc_day_test_regex(${YEAR} ${day} ${ProjectId}test   "13" "43")
+add_aoc_day_test_regex(${YEAR} ${day} ${ProjectId}input  "1346" "8493")
