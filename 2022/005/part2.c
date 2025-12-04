@@ -122,7 +122,7 @@ static int crate_lift(struct context *_ctx, command_t *_cmd)
             break;
     }
 
-    aoc_engine_list_objects(_ctx->_eng);
+    aoc_engine_prompt_obj_list(_ctx->_eng);
 
     size_t _ll_size = dll_size(&_ctx->_grippedBoxes);
     if (_ll_size)
@@ -152,7 +152,7 @@ static int crate_lift(struct context *_ctx, command_t *_cmd)
                 if (!tracker->_blocked)
                     _all_blocked = false;
             }
-            aoc_engine_list_objects(_ctx->_eng);
+            aoc_engine_prompt_obj_list(_ctx->_eng);
         }
 
         aoc_engine_prompt_multistr(_ctx->_eng, SLEEP_TIME_MS, "gripped", _grippedReport);
@@ -184,7 +184,7 @@ static int crate_change_lane(struct context *_ctx, command_t *_cmd)
         }
         assert(_ii != 100 && "%s failed");
     }
-    aoc_engine_list_objects(_ctx->_eng);
+    aoc_engine_prompt_obj_list(_ctx->_eng);
 
     char _coord_str[4] = "";
     sprintf(_coord_str, "%3ld", _cmd->from);
@@ -219,7 +219,7 @@ static int crate_deposit(struct context *_ctx, command_t *_cmd)
             if (aoc_engine_step_object(_ctx->_eng, _grippedObj, 1LU, AOC_DIR_DOWN, GREEN))
                 deposited++;
         }
-        aoc_engine_list_objects(_ctx->_eng);
+        aoc_engine_prompt_obj_list(_ctx->_eng);
 
         aoc_engine_prompt_multistr(_ctx->_eng, SLEEP_TIME_MS, "depositing", _depositReport);
     }

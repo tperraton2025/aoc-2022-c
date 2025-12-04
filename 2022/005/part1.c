@@ -97,7 +97,7 @@ static int crate_lift(struct context *_ctx, command_t *_cmd)
         {
             aoc_engine_prompt_multistr(_ctx->_eng, SLEEP_TIME_MS, "gripped", aoc_engine_get_obj_name(_ctx->_grippedBox));
             while (!aoc_engine_step_object(_ctx->_eng, _ctx->_grippedBox, 1LU, AOC_DIR_UP, GREEN))
-                aoc_engine_list_objects(_ctx->_eng);
+                aoc_engine_prompt_obj_list(_ctx->_eng);
             return 0;
         }
     }
@@ -122,7 +122,7 @@ static int crate_change_lane(struct context *_ctx, command_t *_cmd)
         {
             aoc_engine_prompt_extra_stats_as_err(_ctx->_eng, "moving %s failed", aoc_engine_get_obj_name(_ctx->_grippedBox));
         }
-        aoc_engine_list_objects(_ctx->_eng);
+        aoc_engine_prompt_obj_list(_ctx->_eng);
 
         char _dest_col_str[4] = "";
         sprintf(_dest_col_str, "%3ld", _cmd->to);
@@ -136,7 +136,7 @@ static int crate_deposit(struct context *_ctx, command_t *_cmd)
 {
     while (!aoc_engine_step_object(_ctx->_eng, _ctx->_grippedBox, 1LU, AOC_DIR_DOWN, GREEN))
     {
-        aoc_engine_list_objects(_ctx->_eng);
+        aoc_engine_prompt_obj_list(_ctx->_eng);
         aoc_engine_prompt_multistr(_ctx->_eng, SLEEP_TIME_MS, "depositing", aoc_engine_get_obj_name(_ctx->_grippedBox));
     }
     aoc_engine_draw_object(_ctx->_eng, _ctx->_grippedBox, NULL);
@@ -168,7 +168,7 @@ static int crane_action(struct context *_ctx)
             if (crate_deposit(_ctx, _cmd))
                 continue;
         }
-        aoc_engine_list_objects(_ctx->_eng);
+        aoc_engine_prompt_obj_list(_ctx->_eng);
     }
     dll_free_all(&_ctx->_cmds, free);
     dll_free_all(&_ctx->_columns, free);

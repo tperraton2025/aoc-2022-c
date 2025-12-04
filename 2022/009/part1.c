@@ -49,19 +49,8 @@ typedef struct
     AOC_2D_DIR dir;
     size_t steps;
 } movement_t;
-
-typedef struct
-{
-    struct dll_node _node;
-    coord_t _pos;
-} coord_tracker_t;
-
-static bool coord_compare(void *_a, void *_b)
-{
-    coord_tracker_t *_aNode = CAST(coord_tracker_t *, _a);
-    coord_tracker_t *_bNode = CAST(coord_tracker_t *, _b);
-    return (_aNode->_pos._x == _bNode->_pos._x) && (_aNode->_pos._y == _bNode->_pos._y);
-}
+ 
+ 
 
 static int track_tail(struct solutionCtrlBlock_t *_blk, coord_t *_pos)
 {
@@ -71,8 +60,8 @@ static int track_tail(struct solutionCtrlBlock_t *_blk, coord_t *_pos)
     if (!_npos)
         return ENOMEM;
 
-    _npos->_pos._x = _pos->_x;
-    _npos->_pos._y = _pos->_y;
+    _npos->_coord._x = _pos->_x;
+    _npos->_coord._y = _pos->_y;
     if (NULL == dll_find_node_by_property(&_ctx->_tailPos, (void *)_npos, coord_compare))
         return dll_node_append(&_ctx->_tailPos, NODE_CAST(_npos));
     else
@@ -144,7 +133,7 @@ static int prologue(struct solutionCtrlBlock_t *_blk, int argc, char *argv[])
 
     track_tail(_blk, &start);
     engine_draw(_ctx->_eng);
-    aoc_engine_list_objects(_ctx->_eng);
+    aoc_engine_prompt_obj_list(_ctx->_eng);
     return 0;
 
 error:
@@ -210,7 +199,7 @@ static void int_refresh_link(struct solutionCtrlBlock_t *_blk, aoc_2d_object_h _
         track_tail(_blk, &_ctx->_prevPosFromLastMovedLink);
         _ctx->_lastMovedLink = _tail;
     }
-    aoc_engine_list_objects(_ctx->_eng);
+    aoc_engine_prompt_obj_list(_ctx->_eng);
     engine_cursor_user_stats(_ctx->_eng);
 }
 
@@ -230,7 +219,7 @@ static int epilogue(struct solutionCtrlBlock_t *_blk)
     LL_FOREACH(pos_node, _ctx->_tailPos)
     {
         coord_tracker_t *_npos = CAST(coord_tracker_t *, pos_node);
-        engine_draw_part_at(_ctx->_eng, &_npos->_pos, "#");
+        engine_draw_part_at(_ctx->_eng, &_npos->_coord, "#");
     }
 
     _ctx->result = dll_size(&_ctx->_tailPos);

@@ -24,13 +24,6 @@ static command_t *command_ctor(command_t *_ncmd)
     return ret;
 }
 
-typedef struct coord_tracker
-{
-    struct dll_node _node;
-    coord_t _coord;
-} coord_tracker_t;
-
-DLL_NODE_CTOR(coord_tracker_t, coord_tracker);
 
 static bool has_same_column(void *arga, void *argb)
 {
