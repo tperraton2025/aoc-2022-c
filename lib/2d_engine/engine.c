@@ -12,6 +12,8 @@ void engine_free(aoc_2d_engine_h _eng)
     FREE(_eng);
 }
 
+DLL_NODE_CTOR(coord_tracker_t, coordtracker_ctor);
+
 aoc_2d_engine_h engine_create(coord_t *ncoordlimits, char _voidsym, size_t delay)
 {
     aoc_2d_engine_h _eng = NULL;
@@ -369,7 +371,7 @@ dll_head_h engine_get_objects_positions(aoc_2d_engine_h _eng)
     LL_FOREACH(_objn, _eng->_objects)
     {
         aoc_2d_object_h _objh = (aoc_2d_object_h)_objn;
-        coord_tracker_t *_ntr = coord_tracker();
+        coord_tracker_h _ntr = coordtracker_ctor();
         _ntr->_coord._x = _objh->_pos._x;
         _ntr->_coord._y = _objh->_pos._y;
         dll_node_append(_poslists, &_ntr->_node);

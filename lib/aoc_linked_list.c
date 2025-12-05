@@ -284,14 +284,14 @@ dll_head_h dll_clone_trimmed(dll_head_h head, size_t nodesize, void *_prop, bool
     return _trimhead;
 }
 
-int dll_trim_nodes(dll_head_h head, bool (*ifeq)(void *_a), void(free)(void *arg))
+int dll_trim_nodes(dll_head_h head, void *arg, bool (*remifeq)(void *_a, void *_b), void(free)(void *arg))
 {
-    if (!head || !ifeq || !free)
+    if (!head || !remifeq || !free)
         return EINVAL;
 
     LL_FOREACH_P(_node, head)
     {
-        if (!ifeq((void *)_node))
+        if (remifeq(_node, arg))
             continue;
         dll_node_disconnect(head, _node);
         free(_node);

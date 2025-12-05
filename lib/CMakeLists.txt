@@ -18,6 +18,7 @@ add_library(
   aoc_parser.c
   aoc_stack.c
   aoc_ring_buffer.c
+  aoc_ranges.c
   aoc_tree.c
   aoc_numeric.c
   ${2D_ENGINE_SRCS})
@@ -31,5 +32,6 @@ add_subdirectory(tests)
 target_include_directories(
   libaochelpers
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/2d_engine/inc
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/linked_lists
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/private
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)

@@ -26,4 +26,5 @@ typedef enum
     AOC_DIR_FLAG_LEFT = 0b1000,
     AOC_DIR_FLAG_MAX,
 } AOC_2D_DIR_FLAG;
+
 #endif

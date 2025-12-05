@@ -41,22 +41,22 @@ int move_within_coord(aoc_2d_engine_h _eng, coord_t *_pos, size_t _steps, AOC_2D
     switch (_dir)
     {
     case AOC_DIR_UP:
-        if (!N_IN_RANGE(_pos->_y - _steps, _eng->_coordlimits._min._y, _eng->_coordlimits._max._y))
+        if (!N_BETWEEN_AB(_pos->_y - _steps, _eng->_coordlimits._min._y, _eng->_coordlimits._max._y))
             return ERANGE;
         _pos->_y -= _steps;
         break;
     case AOC_DIR_DOWN:
-        if (!N_IN_RANGE(_pos->_y + _steps, _eng->_coordlimits._min._y, _eng->_coordlimits._max._y))
+        if (!N_BETWEEN_AB(_pos->_y + _steps, _eng->_coordlimits._min._y, _eng->_coordlimits._max._y))
             return ERANGE;
         _pos->_y += _steps;
         break;
     case AOC_DIR_LEFT:
-        if (!N_IN_RANGE(_pos->_x - _steps, _eng->_coordlimits._min._x, _eng->_coordlimits._max._x))
+        if (!N_BETWEEN_AB(_pos->_x - _steps, _eng->_coordlimits._min._x, _eng->_coordlimits._max._x))
             return ERANGE;
         _pos->_x -= _steps;
         break;
     case AOC_DIR_RIGHT:
-        if (!N_IN_RANGE(_pos->_x + _steps, _eng->_coordlimits._min._x, _eng->_coordlimits._max._x))
+        if (!N_BETWEEN_AB(_pos->_x + _steps, _eng->_coordlimits._min._x, _eng->_coordlimits._max._x))
             return ERANGE;
         _pos->_x += _steps;
         break;
@@ -72,22 +72,22 @@ int move_within_window(aoc_2d_engine_h _eng, coord_t *_pos, size_t _steps, AOC_2
     switch (_dir)
     {
     case AOC_DIR_UP:
-        if (!N_IN_RANGE(_pos->_y - _steps, _eng->_drawlimits._min._y, _eng->_drawlimits._max._y))
+        if (!N_BETWEEN_AB(_pos->_y - _steps, _eng->_drawlimits._min._y, _eng->_drawlimits._max._y))
             return ERANGE;
         _pos->_y -= _steps;
         break;
     case AOC_DIR_DOWN:
-        if (!N_IN_RANGE(_pos->_y + _steps, _eng->_drawlimits._min._y, _eng->_drawlimits._max._y))
+        if (!N_BETWEEN_AB(_pos->_y + _steps, _eng->_drawlimits._min._y, _eng->_drawlimits._max._y))
             return ERANGE;
         _pos->_y += _steps;
         break;
     case AOC_DIR_LEFT:
-        if (!N_IN_RANGE(_pos->_x - _steps, _eng->_drawlimits._min._x, _eng->_drawlimits._max._x))
+        if (!N_BETWEEN_AB(_pos->_x - _steps, _eng->_drawlimits._min._x, _eng->_drawlimits._max._x))
             return ERANGE;
         _pos->_x -= _steps;
         break;
     case AOC_DIR_RIGHT:
-        if (!N_IN_RANGE(_pos->_x + _steps, _eng->_drawlimits._min._x, _eng->_drawlimits._max._x))
+        if (!N_BETWEEN_AB(_pos->_x + _steps, _eng->_drawlimits._min._x, _eng->_drawlimits._max._x))
             return ERANGE;
         _pos->_x += _steps;
         break;
@@ -100,9 +100,9 @@ int move_within_window(aoc_2d_engine_h _eng, coord_t *_pos, size_t _steps, AOC_2
 
 int is_position_in_box(aoc_2d_engine_h _eng, coord_t *_pos)
 {
-    if (!N_IN_RANGE(_pos->_y, _eng->_coordlimits._min._y, _eng->_coordlimits._max._y))
+    if (!N_BETWEEN_AB(_pos->_y, _eng->_coordlimits._min._y, _eng->_coordlimits._max._y))
         return ERANGE;
-    if (!N_IN_RANGE(_pos->_x, _eng->_coordlimits._min._x, _eng->_coordlimits._max._x))
+    if (!N_BETWEEN_AB(_pos->_x, _eng->_coordlimits._min._x, _eng->_coordlimits._max._x))
         return ERANGE;
     return 0;
 }
@@ -121,9 +121,9 @@ int put_pos(aoc_2d_engine_h _eng, coord_t *_pos, coord_t *_npos)
 
 int put_part(aoc_2d_engine_h _eng, part_h _sym, coord_t *_delta)
 {
-    if (!N_IN_RANGE(_delta->_y, _eng->_coordlimits._min._x, _eng->_coordlimits._max._y))
+    if (!N_BETWEEN_AB(_delta->_y, _eng->_coordlimits._min._x, _eng->_coordlimits._max._y))
         return ERANGE;
-    if (!N_IN_RANGE(_delta->_x, _eng->_coordlimits._min._x, _eng->_coordlimits._max._x))
+    if (!N_BETWEEN_AB(_delta->_x, _eng->_coordlimits._min._x, _eng->_coordlimits._max._x))
         return ERANGE;
     return 0;
 }

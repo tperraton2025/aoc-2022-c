@@ -5,24 +5,24 @@
 #include "aoc_ranges.h"
 #include "aoc_linked_list.h"
 
-
 typedef struct context *aoc_context_h;
 
 /**
  * Text input parsers
  */
 
-struct parser
+typedef struct parser
 {
     struct dll_node _node;
     char *_name;
     void *arg;
     size_t _parsed;
     int (*_func)(void *arg, char *_str);
-};
-typedef struct parser *parser_h;
+} parser_t;
+typedef parser_t *parser_h;
 
-int parser_append(dll_head_h _ll, parser_h parser, void *arg);
-int parse_all(dll_head_h _ll, char *str);
-void parser_free(void *_data);
+parser_h parser_list_init();
+int parser_append(dll_head_h head, parser_h parser, void *arg);
+int parse_all(dll_head_h head, char *str);
+void parser_list_free(parser_h *list);
 #endif

@@ -20,8 +20,8 @@
 #define ABSOLUTE_MAX_STAT_LEN (128) f
 #define ABSOLUTE_MAX_STATS_LINES (128)
 
-#define COORD_RANGE_CHECK(_coord, _range) (N_IN_RANGE(_coord._x, _range._min._x, _range._max._x) && N_IN_RANGE(_coord._y, _range._min._y, _range._max._y))
-#define COORD_RANGE_CHECK_P(_coord, _range) (N_IN_RANGE(_coord->_x, _range._min._x, _range._max._x) && N_IN_RANGE(_coord->_y, _range._min._y, _range._max._y))
+#define COORD_RANGE_CHECK(_coord, _range) (N_BETWEEN_AB(_coord._x, _range._min._x, _range._max._x) && N_BETWEEN_AB(_coord._y, _range._min._y, _range._max._y))
+#define COORD_RANGE_CHECK_P(_coord, _range) (N_BETWEEN_AB(_coord->_x, _range._min._x, _range._max._x) && N_BETWEEN_AB(_coord->_y, _range._min._y, _range._max._y))
 
 #define COORD_MAXIMA_CHECK(_a, _b) (_a._x <= _b._x) && (_a._y <= _b._y)
 #define BOUNDARY_CHECK_P(_a, _b) (_a->_x <= _b->_x) && (_a->_y <= _b->_y)
@@ -148,7 +148,8 @@ typedef struct coord_tracker
     coord_t _coord;
 } coord_tracker_t;
 
-DLL_NODE_CTOR(coord_tracker_t, coord_tracker);
+typedef coord_tracker_t *coord_tracker_h;
+coord_tracker_h coordtracker_ctor();
 
 bool coord_compare(void *_a, void *_b);
 int engine_remove_object(aoc_2d_engine_h eng, aoc_2d_object_h obj);

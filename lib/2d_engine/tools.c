@@ -121,7 +121,7 @@ void aoc_engine_prompt(aoc_2d_engine_h _eng, const size_t _sleep, size_t _count,
 
 bool coord_compare(void *_a, void *_b)
 {
-    coord_tracker_t *_aNode = CAST(coord_tracker_t *, _a);
-    coord_tracker_t *_bNode = CAST(coord_tracker_t *, _b);
+    coord_tracker_h _aNode = CAST(coord_tracker_h , _a);
+    coord_tracker_h _bNode = CAST(coord_tracker_h , _b);
     return (_aNode->_coord._x == _bNode->_coord._x) && (_aNode->_coord._y == _bNode->_coord._y);
 }
