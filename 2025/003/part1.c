@@ -86,3 +86,5 @@ static void freeSolution(struct solutionCtrlBlock_t *_blk)
 
 static struct solutionCtrlBlock_t privPart1 = {._name = CONFIG_DAY " part 1", ._prologue = prologue, ._handler = handler, ._epilogue = epilogue, ._free = freeSolution};
 struct solutionCtrlBlock_t *part1 = &privPart1;
+
+DLL_NODE_CTOR(joltage_t, joltage_ctor);

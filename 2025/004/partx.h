@@ -45,7 +45,7 @@ static dll_head_h enumeraterollsatproximity(dll_head_h allpos)
     {
         size_t _limit = 0;
         coord_tracker_t _pos = {0};
-        coord_tracker_t *_trkh = (coord_tracker_t *)_posn;
+        coord_tracker_h _trkh = (coord_tracker_h )_posn;
         coord_t *_posh = &_trkh->_coord;
 
         size_t startx = _posh->_x ? _posh->_x - 1 : _posh->_x;
@@ -64,7 +64,7 @@ static dll_head_h enumeraterollsatproximity(dll_head_h allpos)
         }
         if (_limit < 4)
         {
-            coord_tracker_t *_ntr = coord_tracker();
+            coord_tracker_h _ntr = coordtracker_ctor();
             _ntr->_coord._x = _posh->_x;
             _ntr->_coord._y = _posh->_y;
             dll_node_append(_tomark, &_ntr->_node);

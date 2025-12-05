@@ -21,16 +21,18 @@ typedef struct context
     int _maxCalories;
 } context_t;
 
-DLL_NODE_CTOR(elfCal_t, elfNodeCtor);
+DLL_NODE_CTOR(elfCal_t, elfnode_ctor);
 
 static elfCal_t *elfCtor(dll_head_h head)
 {
-    elfCal_t *_ret = elfNodeCtor();
+    elfCal_t *_ret = elfnode_ctor();
     if (!_ret)
         return NULL;
+
     _ret->_count = dll_size(head);
     _ret->_calories = 0;
     _ret->_name = malloc(sizeof("elfo 999"));
+    
     if (!_ret->_name)
     {
         FREE(_ret);

@@ -55,7 +55,7 @@ typedef struct
 static int track_tail(struct solutionCtrlBlock_t *_blk, coord_t *_pos)
 {
     struct context *_ctx = CTX_CAST(_blk->_data);
-    coord_tracker_t *_npos = NULL;
+    coord_tracker_h _npos = NULL;
     _npos = malloc(sizeof(coord_tracker_t));
     if (!_npos)
         return ENOMEM;
@@ -180,7 +180,7 @@ static int handler(struct solutionCtrlBlock_t *_blk)
 static void int_refresh_link(struct solutionCtrlBlock_t *_blk, aoc_2d_object_h _head, aoc_2d_object_h _tail, AOC_2D_DIR _dir)
 {
     struct context *_ctx = CTX_CAST(_blk->_data);
-    coord_tracker_t *_npos = NULL;
+    coord_tracker_h _npos = NULL;
 
     if (_ctx->_head == _head)
     {
@@ -218,7 +218,7 @@ static int epilogue(struct solutionCtrlBlock_t *_blk)
 
     LL_FOREACH(pos_node, _ctx->_tailPos)
     {
-        coord_tracker_t *_npos = CAST(coord_tracker_t *, pos_node);
+        coord_tracker_h _npos = CAST(coord_tracker_h , pos_node);
         engine_draw_part_at(_ctx->_eng, &_npos->_coord, "#");
     }
 

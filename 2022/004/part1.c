@@ -9,8 +9,8 @@
 
 struct context
 {
-    struct range_t _a;
-    struct range_t _b;
+    range_t _a;
+    range_t _b;
     int result;
 };
 

@@ -335,7 +335,7 @@ static int parseblock(void *arg, char *_str)
         match += sscanf(_buf, "[%c]", &_buf[1]);
         if (!match)
             continue;
-        if (N_IN_RANGE(_buf[1], 'A', 'Z'))
+        if (N_BETWEEN_AB(_buf[1], 'A', 'Z'))
         {
             aoc_2d_object_h _nobj = aoc_engine_object(_ctx->_eng, _buf, &_ctx->_pos, _buf, OBJ_PROPERTY_MOBILE);
             ret = aoc_engine_append_obj(_ctx->_eng, _nobj);
@@ -347,7 +347,7 @@ static int parseblock(void *arg, char *_str)
             }
             if (!dll_find_node_by_property(&_ctx->_columns, &_ctx->_pos._x, has_same_column))
             {
-                coord_tracker_t *_trck = coord_tracker();
+                coord_tracker_h _trck = coordtracker_ctor();
                 _trck->_coord._x = _ctx->_pos._x;
                 dll_node_sorted_insert(&_ctx->_columns, NODE_CAST(_trck), highest_column);
             }

@@ -82,7 +82,7 @@ static void markfreerolls(struct context *_ctx)
 {
     LL_FOREACH_P(_posn, _ctx->_freerolls)
     {
-        coord_tracker_t *_trkh = (coord_tracker_t *)_posn;
+        coord_tracker_h _trkh = (coord_tracker_h )_posn;
         coord_t *_posh = &_trkh->_coord;
         aoc_2d_object_h _toremove = aoc_engine_get_obj_by_position(_ctx->_engine, _posh);
         engine_remove_object(_ctx->_engine, _toremove);

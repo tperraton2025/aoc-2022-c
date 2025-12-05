@@ -23,7 +23,7 @@ typedef struct joltage
 } joltage_t;
 typedef struct joltage *joltage_h;
 
-DLL_NODE_CTOR(joltage_t, joltage)
+joltage_h joltage_ctor();
 
 static bool hasexactjoltagerating(void *arg, void *prop)
 {
@@ -64,7 +64,7 @@ static void populatejoltageratings(dll_head_h head, char *_str)
     {
         if (1 == sscanf(_str + _ii, "%1lu", &_joltagetmp._rating))
         {
-            joltage_h _njolt = joltage();
+            joltage_h _njolt = joltage_ctor();
             _njolt->_rating = _joltagetmp._rating;
             _njolt->_order = _ii;
             dll_node_sorted_insert(head, &_njolt->_node, joltagecomparebyrating);

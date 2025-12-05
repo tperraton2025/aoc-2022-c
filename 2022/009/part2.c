@@ -54,7 +54,7 @@ static int track_tail(struct solutionCtrlBlock_t *_blk, coord_t *_pos)
     coord_tracker_t _posTrack = {._coord = {._x = _pos->_x, _pos->_y}};
     if (NULL == dll_find_node_by_property(&_ctx->_tailPos, (void *)&_posTrack, coord_compare))
     {
-        coord_tracker_t *_npos = malloc(sizeof(coord_tracker_t));
+        coord_tracker_h _npos = malloc(sizeof(coord_tracker_t));
         if (!_npos)
             return ENOMEM;
         _npos->_coord._x = _pos->_x;
@@ -201,7 +201,7 @@ static int handler(struct solutionCtrlBlock_t *_blk)
 static void int_refresh_link(struct solutionCtrlBlock_t *_blk, aoc_2d_object_h _head, aoc_2d_object_h _tail, AOC_2D_DIR _dir)
 {
     struct context *_ctx = CTX_CAST(_blk->_data);
-    coord_tracker_t *_npos = NULL;
+    coord_tracker_h _npos = NULL;
 
     if (_ctx->_head == _head)
     {
@@ -234,7 +234,7 @@ static int epilogue(struct solutionCtrlBlock_t *_blk)
     LL_FOREACH(_node, _ctx->_movs)
     {
         nmov = MOV_CAST(_node);
-        coord_tracker_t *_npos = NULL;
+        coord_tracker_h _npos = NULL;
         for (size_t ii = 0; ii < nmov->steps; ii++)
         {
             _ctx->_lastMovedLink = _ctx->_head;
@@ -248,7 +248,7 @@ static int epilogue(struct solutionCtrlBlock_t *_blk)
 
     LL_FOREACH(pos_node, _ctx->_tailPos)
     {
-        coord_tracker_t *_npos = CAST(coord_tracker_t *, pos_node);
+        coord_tracker_h _npos = CAST(coord_tracker_h , pos_node);
         engine_draw_part_at(_ctx->_eng, &_npos->_coord, "#");
     }
     int result = dll_size(&_ctx->_tailPos);

@@ -45,7 +45,7 @@ static int handler(struct solutionCtrlBlock_t *_blk)
         his -= 'A';
         mine -= 'X';
         size_t index = score_ind_from_items(mine, his);
-        if (!N_IN_RANGE(his, 0, 2) || !N_IN_RANGE(mine, 0, 2) || !N_IN_RANGE(index, 0, 2))
+        if (!N_BETWEEN_AB(his, 0, 2) || !N_BETWEEN_AB(mine, 0, 2) || !N_BETWEEN_AB(index, 0, 2))
         {
             aoc_err("%s:%d his:%u mine:%u index:%lu", __FILE__, __LINE__, (uint8_t)his, (uint8_t)mine, index);
             exit(EXIT_FAILURE);

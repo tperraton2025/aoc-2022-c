@@ -70,7 +70,7 @@ static void markfreerolls(struct context *_ctx)
     LL_FOREACH_P(_posn, _ctx->_freerolls)
     {
         size_t _limit = 0;
-        coord_tracker_t *_trkh = (coord_tracker_t *)_posn;
+        coord_tracker_h _trkh = (coord_tracker_h )_posn;
         coord_t *_posh = &_trkh->_coord;
         engine_draw_part_at(_ctx->_engine, _posh, "x");
     }

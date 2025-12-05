@@ -64,7 +64,7 @@ static int handler(struct solutionCtrlBlock_t *_blk)
 
         /* Depending on the outcome required */
 
-        if (!N_IN_RANGE(_luHisInd, 0, 2) || !N_IN_RANGE(_luMineInd, 0, 2) || !N_IN_RANGE(_luReqOutcomeInd, 0, 2))
+        if (!N_BETWEEN_AB(_luHisInd, 0, 2) || !N_BETWEEN_AB(_luMineInd, 0, 2) || !N_BETWEEN_AB(_luReqOutcomeInd, 0, 2))
         {
             aoc_err("%s:%d  he picked:%i I picked:%i outcome:%i", __FILE__, __LINE__, _luHisInd,
                     _luMineInd,
